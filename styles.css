@@ -1076,7 +1076,7 @@ button {
 
 .paw-wall-track {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0;
   overflow-x: scroll;
   scroll-behavior: smooth;

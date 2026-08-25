@@ -27,7 +27,7 @@ const USE_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
    configured. Swap only this object to change the backend.
    ================================================================ */
 const StorageLayer = {
-  STORAGE_KEY: 'packPrintProject_paws_v1',
+  STORAGE_KEY: 'packPrintProject_paws_v3',
 
   /** Return all visible paw entries, oldest first */
   async getAll() {
@@ -113,36 +113,18 @@ const StorageLayer = {
     };
   },
 
-  /** Seed demo entries if the wall is empty (localStorage only) */
+  /** Seed the wall with the founding entry if empty (localStorage only) */
   async seedIfEmpty() {
     if (USE_SUPABASE) return;
     const all = await this.getAll();
     if (all.length > 0) return;
 
     const demo = [
-      { hunterName: 'Moonlight',   hunterNumber: '#00042', countryCode: 'DE', countryName: 'Germany',     message: 'Valko, you mean the world to so many of us. Thank you for everything you give the community. 🌙', origin: 'Gamescom' },
-      { hunterName: 'LittleWolf',  hunterNumber: '#00011', countryCode: 'DE', countryName: 'Germany',     message: 'The Pack howls for you! See you in Cologne!', origin: 'Gamescom' },
-      { hunterName: 'StarHunter',  hunterNumber: '#00088', countryCode: 'US', countryName: 'United States', message: 'Sending love from across the ocean. You inspire me every single day.', origin: 'From afar' },
-      { hunterName: 'GravityGirl', hunterNumber: '',       countryCode: 'CA', countryName: 'Canada',       message: 'I cried watching you hit your milestone. Worth every second. Pack forever.', origin: 'From afar' },
-      { hunterName: 'PawPrint',    hunterNumber: '#00007', countryCode: 'DE', countryName: 'Germany',      message: 'First time attending Gamescom because of you. I am so nervous and so excited!', origin: 'Gamescom' },
-      { hunterName: 'Wish',        hunterNumber: '#00001', countryCode: 'DE', countryName: 'Germany',      message: 'This wall exists because of how much the Pack loves you. We are all here.', origin: 'Gamescom' },
-      { hunterName: 'Lumi',        hunterNumber: '#00215', countryCode: 'JP', countryName: 'Japan',        message: 'たくさんの愛を贈ります、Valko。あなたのことをずっと応援しています！', origin: 'From afar' },
-      { hunterName: 'Echo',        hunterNumber: '#00099', countryCode: 'GB', countryName: 'United Kingdom', message: 'Couldn\'t be there in person but my heart is with the whole Pack.', origin: 'From afar' },
-      { hunterName: 'Cipher',      hunterNumber: '#00334', countryCode: 'BR', countryName: 'Brazil',       message: 'Valko, you helped me through some really dark times. Thank you.', origin: 'From afar' },
-      { hunterName: 'Solstice',    hunterNumber: '#00156', countryCode: 'DE', countryName: 'Germany',      message: 'The energy at Gamescom is going to be unreal. Cheering from Berlin!', origin: 'Gamescom' },
-      { hunterName: 'Flare',       hunterNumber: '#00028', countryCode: 'AT', countryName: 'Austria',      message: 'See you by Hall 9! 🐾🐾🐾', origin: 'Gamescom' },
-      { hunterName: 'Riven',       hunterNumber: '',       countryCode: 'AU', countryName: 'Australia',    message: 'Joining from Australia! The time zone won\'t stop me from being part of this.', origin: 'From afar' },
-      { hunterName: 'Nova',        hunterNumber: '#00071', countryCode: 'KR', countryName: 'South Korea',  message: 'Every stream, every moment, every memory — thank you for sharing them with us.', origin: 'From afar' },
-      { hunterName: 'Dusk',        hunterNumber: '#00403', countryCode: 'NL', countryName: 'Netherlands',  message: 'Pack Print Project is such a beautiful idea. So happy to be a part of it.', origin: 'Gamescom' },
-      { hunterName: 'Glimmer',     hunterNumber: '#00192', countryCode: 'FR', countryName: 'France',       message: '', origin: 'From afar' },
-      { hunterName: 'Zephyr',      hunterNumber: '#00577', countryCode: 'CH', countryName: 'Switzerland',  message: 'Can\'t stop smiling thinking about Valko seeing all these paws. 🐾', origin: 'Gamescom' },
-      { hunterName: 'Sable',       hunterNumber: '',       countryCode: 'MX', countryName: 'Mexico',       message: 'The Pack is real and the Pack is here.', origin: 'From afar' },
-      { hunterName: 'Aurel',       hunterNumber: '#00261', countryCode: 'DE', countryName: 'Germany',      message: 'Vielen Dank, Valko. Du bedeutest uns so viel.', origin: 'Gamescom' },
+      { hunterName: 'Wishy ✦', hunterNumber: '#00001', countryCode: 'DE', countryName: 'Germany', message: 'We only had a few glimpses but somehow, we saw an entire YOU, Valko. Every glance, gesture and tiny detail gave us another piece of you to carry into our art and stories. For us, you never left. And I\'m confident, you\'ll come back. <3', origin: 'Gamescom' },
     ];
 
-    const base = Date.now() - demo.length * 3_600_000;
     demo.forEach((d, i) => {
-      const saved = { id: `demo_${i}`, timestamp: base + i * 3_600_000, ...d };
+      const saved = { id: `seed_${i}`, timestamp: Date.now(), ...d };
       const all2 = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
       all2.push(saved);
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(all2));
@@ -203,16 +185,25 @@ function countryFlag(code) {
 const PawWallRenderer = {
   track: null,
   mosaic: null,
+  mosaicViewport: null,
   mode: 'scroll', // 'scroll' | 'mosaic'
 
+  // Pan state for mosaic
+  _panX: 0,
+  _panY: 0,
+  _canvasW: 0,
+  _canvasH: 0,
+
   init() {
-    this.track  = document.getElementById('paw-wall-track');
-    this.mosaic = document.getElementById('paw-wall-mosaic');
+    this.track         = document.getElementById('paw-wall-track');
+    this.mosaic        = document.getElementById('paw-wall-mosaic');
+    this.mosaicViewport = document.getElementById('paw-wall-mosaic-viewport');
     this.render();
     this.initDragScroll();
     this.initArrows();
     this.initModeSwitcher();
     this.initSearch();
+    this.initMosaicPan();
   },
 
   async render() {
@@ -244,40 +235,94 @@ const PawWallRenderer = {
    * a random spot, nudged slightly so they cluster naturally.
    */
   layoutMosaic() {
-    if (!this.mosaic) return;
+    if (!this.mosaic || !this.mosaicViewport) return;
     const items = this.mosaic.querySelectorAll('.paw-entry');
     if (!items.length) return;
 
-    const W = this.mosaic.offsetWidth  || 900;
-    const H = this.mosaic.offsetHeight || 520;
+    const VW = this.mosaicViewport.clientWidth  || 900;
+    const VH = this.mosaicViewport.clientHeight || 520;
 
-    // Paw card is roughly 80×110px in the mosaic; leave some edge padding
-    const PAD_X = 20, PAD_Y = 20;
-    const CARD_W = 82, CARD_H = 108;
+    // Canvas is bigger than the viewport — grows with entry count
+    // ~6 cols of 130px, rows of 130px, minimum = 2× viewport
+    const CARD_W = 100, CARD_H = 120, PAD = 24;
+    const cols   = Math.max(6, Math.ceil(Math.sqrt(items.length * 1.6)));
+    const rows   = Math.ceil(items.length / cols) + 1;
+    const CW     = Math.max(VW * 2, cols * (CARD_W + PAD) + PAD);
+    const CH     = Math.max(VH * 2, rows * (CARD_H + PAD) + PAD);
+
+    this._canvasW = CW;
+    this._canvasH = CH;
+    this.mosaic.style.width  = `${CW}px`;
+    this.mosaic.style.height = `${CH}px`;
+
+    // Start pan centred
+    this._panX = -(CW - VW) / 2;
+    this._panY = -(CH - VH) / 2;
+    this._applyPan();
 
     items.forEach((el, i) => {
       // Deterministic "random" using two prime multipliers on the index
-      const rx  = ((i * 2357 + 431)  % 1000) / 1000; // 0–1
-      const ry  = ((i * 1753 + 877)  % 1000) / 1000; // 0–1
-      const rdx = ((i * 3001 + 199)  % 1000) / 1000; // 0–1  (drift X)
-      const rdy = ((i * 1301 + 761)  % 1000) / 1000; // 0–1  (drift Y)
-      const rdd = ((i * 1117 + 503)  % 1000) / 1000; // 0–1  (duration variance)
+      const rx  = ((i * 2357 + 431)  % 1000) / 1000;
+      const ry  = ((i * 1753 + 877)  % 1000) / 1000;
+      const rdx = ((i * 3001 + 199)  % 1000) / 1000;
+      const rdy = ((i * 1301 + 761)  % 1000) / 1000;
+      const rdd = ((i * 1117 + 503)  % 1000) / 1000;
 
-      const x = PAD_X + rx * (W - CARD_W - PAD_X * 2);
-      const y = PAD_Y + ry * (H - CARD_H - PAD_Y * 2);
+      const x = PAD + rx * (CW - CARD_W - PAD * 2);
+      const y = PAD + ry * (CH - CARD_H - PAD * 2);
 
-      // Drift amplitude: ±4–8px X, ±5–10px Y — slow, organic
-      const driftX = (rdx - 0.5) * 14; // –7 to +7 px
-      const driftY = (rdy - 0.5) * 16; // –8 to +8 px
-      const dur    = 10 + rdd * 8;      // 10–18 s per cycle
+      const driftX = (rdx - 0.5) * 14;
+      const driftY = (rdy - 0.5) * 16;
+      const dur    = 10 + rdd * 8;
 
       el.style.left = `${x}px`;
       el.style.top  = `${y}px`;
       el.style.setProperty('--drift-x',     `${driftX}px`);
       el.style.setProperty('--drift-y',     `${driftY}px`);
       el.style.setProperty('--drift-dur',   `${dur}s`);
-      el.style.setProperty('--drift-delay', `${-(rdd * dur).toFixed(1)}s`); // negative = already mid-cycle
+      el.style.setProperty('--drift-delay', `${-(rdd * dur).toFixed(1)}s`);
     });
+  },
+
+  _applyPan() {
+    if (!this.mosaic || !this.mosaicViewport) return;
+    const VW = this.mosaicViewport.clientWidth;
+    const VH = this.mosaicViewport.clientHeight;
+    // Clamp so canvas never leaves viewport edge
+    const minX = -(this._canvasW - VW);
+    const minY = -(this._canvasH - VH);
+    this._panX = Math.min(0, Math.max(minX, this._panX));
+    this._panY = Math.min(0, Math.max(minY, this._panY));
+    this.mosaic.style.transform = `translate(${this._panX}px, ${this._panY}px)`;
+  },
+
+  /* ---- Mosaic pan (drag in all directions like a map) ---- */
+  initMosaicPan() {
+    const vp = this.mosaicViewport;
+    if (!vp) return;
+
+    let isDown = false, lastX = 0, lastY = 0;
+
+    const start = (x, y) => {
+      isDown = true; lastX = x; lastY = y;
+      vp.classList.add('panning');
+    };
+    const move = (x, y) => {
+      if (!isDown) return;
+      this._panX += x - lastX;
+      this._panY += y - lastY;
+      lastX = x; lastY = y;
+      this._applyPan();
+    };
+    const end = () => { isDown = false; vp.classList.remove('panning'); };
+
+    vp.addEventListener('mousedown',  (e) => { e.preventDefault(); start(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', (e) => move(e.clientX, e.clientY));
+    window.addEventListener('mouseup',   end);
+
+    vp.addEventListener('touchstart', (e) => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    vp.addEventListener('touchmove',  (e) => { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+    vp.addEventListener('touchend',   end);
   },
 
   /** Add a newly submitted entry at the right end without full re-render */
@@ -417,13 +462,16 @@ const PawWallRenderer = {
     track.addEventListener('touchstart',  pause,  { passive: true });
     track.addEventListener('touchend',    resume, { passive: true });
 
+    // Start at right end so paws immediately flow right → left
+    track.scrollLeft = track.scrollWidth;
+
     const SPEED = 0.7; // px per frame
     const tick = () => {
       if (!this._autoScrollPaused && this.mode === 'scroll') {
-        track.scrollLeft += SPEED;
-        // Seamless loop: when we reach the end, jump back to start
-        if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 2) {
-          track.scrollLeft = 0;
+        track.scrollLeft -= SPEED;
+        // Seamless loop: when we reach the start, jump back to end
+        if (track.scrollLeft <= 1) {
+          track.scrollLeft = track.scrollWidth - track.clientWidth;
         }
       }
       this._autoScrollRAF = requestAnimationFrame(tick);
@@ -553,7 +601,16 @@ const PawWallRenderer = {
       track.scrollTo({ left: el.offsetLeft - track.offsetWidth / 2 + el.offsetWidth / 2, behavior: 'smooth' });
       setTimeout(() => { highlight(el); this._autoScrollPaused = false; }, 300);
     } else {
-      // Mosaic mode — highlight in place, no scroll needed
+      // Mosaic mode — pan canvas so the paw is centred in the viewport
+      if (mosaicEl && this.mosaicViewport) {
+        const VW = this.mosaicViewport.clientWidth;
+        const VH = this.mosaicViewport.clientHeight;
+        const targetX = parseFloat(mosaicEl.style.left) || 0;
+        const targetY = parseFloat(mosaicEl.style.top)  || 0;
+        this._panX = -(targetX - VW / 2 + 50);
+        this._panY = -(targetY - VH / 2 + 55);
+        this._applyPan();
+      }
       highlight(mosaicEl);
     }
     // Always pre-highlight the counterpart so it glows when user switches mode
@@ -1334,11 +1391,11 @@ const PackCountSection = {
       countriesEl.textContent = `from ${countries} countr${countries === 1 ? 'y' : 'ies'} around the world`;
     }
 
-    // Fire exactly once when section enters viewport; disconnect immediately so
-    // scrolling back up never re-triggers it
+    // Re-run count-up every time the section enters viewport
     const observer = new IntersectionObserver((observed) => {
       if (!observed[0].isIntersecting) return;
-      observer.disconnect();
+      section.classList.remove('counted');
+      void section.offsetWidth; // force reflow so CSS transition restarts
       this.run(total, section);
     }, { threshold: 0.2 });
 
@@ -1434,7 +1491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  // Demo entries disabled — wall starts empty
+  await StorageLayer.seedIfEmpty();
 
   ScrollReveal.init();
   NavScrollEffect.init();

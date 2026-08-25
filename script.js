@@ -1341,7 +1341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  await StorageLayer.seedIfEmpty();
+  // Demo entries disabled — wall starts empty
 
   ScrollReveal.init();
   NavScrollEffect.init();

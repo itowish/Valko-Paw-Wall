@@ -1255,8 +1255,15 @@ button {
   100% { transform: rotate(var(--rotation, 0deg)) scale(1); opacity: 1; }
 }
 
+@keyframes pawBob {
+  0%, 100% { transform: rotate(var(--rotation, 0deg)) translateY(0px); }
+  50%       { transform: rotate(var(--rotation, 0deg)) translateY(-9px); }
+}
+
 .paw-entry {
-  animation: pawStamp 0.45s var(--ease-bounce) both;
+  animation:
+    pawStamp 0.45s var(--ease-bounce) var(--stamp-delay, 0s) both,
+    pawBob 3.8s ease-in-out var(--bob-delay, 1s) infinite;
 }
 
 /* ---- Wall mode toggle ---- */

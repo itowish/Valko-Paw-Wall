@@ -325,7 +325,8 @@ const PawWallRenderer = {
     el.setAttribute('data-name', (entry.hunterName || '').toLowerCase());
     el.setAttribute('data-number', (entry.hunterNumber || '').toLowerCase());
     el.style.setProperty('--rotation', `${rotation}deg`);
-    el.style.animationDelay = `${Math.min(index * 30, 600)}ms`;
+    el.style.setProperty('--stamp-delay', `${Math.min(index * 30, 600)}ms`);
+    el.style.setProperty('--bob-delay',   `${Math.min(index * 30, 600) + 500 + (index * 317 % 2000)}ms`);
 
     const flag = entry.countryCode ? countryFlag(entry.countryCode) : '';
 
@@ -416,7 +417,7 @@ const PawWallRenderer = {
     track.addEventListener('touchstart',  pause,  { passive: true });
     track.addEventListener('touchend',    resume, { passive: true });
 
-    const SPEED = 0.4; // px per frame — gentle drift
+    const SPEED = 0.7; // px per frame
     const tick = () => {
       if (!this._autoScrollPaused && this.mode === 'scroll') {
         track.scrollLeft += SPEED;

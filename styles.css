@@ -2426,6 +2426,7 @@ button {
     gap: 2rem;
     text-align: center;
   }
+  .intro-body { text-align: left; }
   .intro-deco { display: none; }
 
   /* How It Works: 2 columns on tablets */

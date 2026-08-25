@@ -701,7 +701,7 @@ button {
 .how-it-works     { background: #0f2c2c; }
 .leave-your-paw   { background: #163838; }
 .paw-wall-section { background: #1f4848; }
-.world-section    { background: #285a5a; }
+.world-section    { background: #1f4848; }
 .event-info       { background: #f0fafa; }
 .memories-teaser  { background: #ffffff; }
 
@@ -971,14 +971,7 @@ button {
 }
 
 .paw-wall-section::before { display: none; }
-.paw-wall-section::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(10,191,191,0.18), transparent);
-  pointer-events: none;
-}
+.world-section::before { display: none; }
 
 .paw-wall-header-wrap {
   padding-top: var(--section-gap);
@@ -1117,7 +1110,7 @@ button {
 
 .counter-label {
   font-size: 0.88rem;
-  color: var(--text-on-dark-muted);
+  color: var(--text-on-dark);
   font-style: italic;
 }
 
@@ -1301,7 +1294,7 @@ button {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-on-dark-muted);
+  color: var(--teal);
   background: none;
   border: none;
   cursor: pointer;
@@ -1312,8 +1305,8 @@ button {
 .wall-mode-btn:hover { color: var(--teal); }
 
 .wall-mode-btn.active {
-  color: var(--teal-dark);
-  background: rgba(10,191,191,0.12);
+  color: #fff;
+  background: var(--teal);
 }
 
 /* ---- Wall mode visibility — JS sets data-wall-mode on section ---- */
@@ -1439,6 +1432,29 @@ button {
   height: auto;
   display: block;
 }
+
+/* Floating background paws inside world-map frame — corners/edges only, away from globe */
+.wmp {
+  position: absolute;
+  background-image: url('assets/images/paw.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(145deg);
+  pointer-events: none;
+  z-index: 1;
+  animation: floatPaw 11s ease-in-out infinite;
+}
+/* Left edge */
+.wmp-1  { width: 48px; height: 48px; top: 10%;  left:  3%;  opacity: 0.10; animation-duration: 12s; animation-delay:  0s;  }
+.wmp-2  { width: 30px; height: 30px; top: 60%;  left:  2%;  opacity: 0.08; animation-duration: 10s; animation-delay: -3s;  }
+.wmp-3  { width: 22px; height: 22px; top: 82%;  left:  8%;  opacity: 0.09; animation-duration: 14s; animation-delay: -6s;  }
+/* Right edge */
+.wmp-4  { width: 42px; height: 42px; top:  8%;  left: 88%;  opacity: 0.09; animation-duration: 11s; animation-delay: -2s;  }
+.wmp-5  { width: 28px; height: 28px; top: 55%;  left: 91%;  opacity: 0.08; animation-duration: 13s; animation-delay: -5s;  }
+.wmp-6  { width: 20px; height: 20px; top: 78%;  left: 85%;  opacity: 0.10; animation-duration:  9s; animation-delay: -7s;  }
+/* Bottom corners */
+.wmp-7  { width: 36px; height: 36px; top: 75%;  left: 20%;  opacity: 0.07; animation-duration: 15s; animation-delay: -1s;  }
+.wmp-8  { width: 26px; height: 26px; top: 80%;  left: 72%;  opacity: 0.08; animation-duration: 12s; animation-delay: -4s;  }
 
 /* Country dots on the map */
 .map-dot {

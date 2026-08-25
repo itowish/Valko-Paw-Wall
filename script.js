@@ -530,19 +530,34 @@ const PawWallRenderer = {
   },
 
   jumpToEntry(el) {
-    // Switch to scroll mode so we can scroll to it
-    const btnScroll = document.getElementById('mode-scroll');
-    if (this.mode !== 'scroll' && btnScroll) btnScroll.click();
+    // Find the same paw in the mosaic by name+number
+    const name   = el.dataset.name;
+    const number = el.dataset.number;
+    const mosaicEl = this.mosaic
+      ? this.mosaic.querySelector(`.paw-entry[data-name="${name}"][data-number="${number}"]`)
+      : null;
 
-    // Find matching element in scroll track
-    setTimeout(() => {
+    // Highlight in both containers
+    const highlight = (target) => {
+      if (!target) return;
+      target.classList.remove('paw-entry--found');
+      void target.offsetWidth; // force reflow to restart animation
+      target.classList.add('paw-entry--found');
+      setTimeout(() => target.classList.remove('paw-entry--found'), 3000);
+    };
+
+    if (this.mode === 'scroll') {
+      // Scroll to entry in track
       const track = this.track;
+      this._autoScrollPaused = true;
       track.scrollTo({ left: el.offsetLeft - track.offsetWidth / 2 + el.offsetWidth / 2, behavior: 'smooth' });
-      // Highlight
-      document.querySelectorAll('.paw-entry--found').forEach(e => e.classList.remove('paw-entry--found'));
-      el.classList.add('paw-entry--found');
-      setTimeout(() => el.classList.remove('paw-entry--found'), 2500);
-    }, 100);
+      setTimeout(() => { highlight(el); this._autoScrollPaused = false; }, 300);
+    } else {
+      // Mosaic mode — highlight in place, no scroll needed
+      highlight(mosaicEl);
+    }
+    // Always pre-highlight the counterpart so it glows when user switches mode
+    setTimeout(() => highlight(this.mode === 'scroll' ? mosaicEl : el), 200);
   },
 
   closeDropdown(dropdown) {

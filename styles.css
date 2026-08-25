@@ -20,6 +20,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Caveat';
+  src: url('assets/fonts/caveat.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ----------------------------------------------------------------
    DESIGN TOKENS
 ---------------------------------------------------------------- */
@@ -65,6 +73,7 @@
   /* Typography */
   --font-display: 'Orbitron', monospace;
   --font-body:    'Inter', sans-serif;
+  --font-hand:    'Caveat', cursive;
 
   /* Spacing */
   --section-gap:  7rem;
@@ -435,10 +444,12 @@ button {
 }
 
 .hero-tagline {
-  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+  font-family: var(--font-hand);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 400;
   color: var(--silver);
-  font-style: italic;
+  font-style: normal;
+  letter-spacing: 0.01em;
   opacity: 0;
   animation: fadeSlideUp 0.8s 0.65s var(--ease) forwards;
 }

@@ -477,18 +477,76 @@ const PawWallRenderer = {
 
   initSearch() {
     const input = document.getElementById('paw-search');
-    if (!input) return;
-    input.addEventListener('input', () => this.filterEntries(input.value));
+    const dropdown = document.getElementById('paw-search-results');
+    if (!input || !dropdown) return;
+
+    input.addEventListener('input', () => this.updateSearchDropdown(input.value, dropdown));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { input.value = ''; this.closeDropdown(dropdown); }
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.paw-search-inner')) this.closeDropdown(dropdown);
+    });
   },
 
-  filterEntries(query) {
+  updateSearchDropdown(query, dropdown) {
     const q = query.trim().toLowerCase();
-    document.querySelectorAll('.paw-entry').forEach(el => {
-      if (!q) { el.hidden = false; return; }
-      const match = el.dataset.name.includes(q) || el.dataset.number.includes(q);
-      el.hidden = !match;
+    if (!q) { this.closeDropdown(dropdown); return; }
+
+    // Collect unique entries from scroll track (source of truth)
+    const entries = Array.from(this.track.querySelectorAll('.paw-entry'));
+    const matches = entries.filter(el =>
+      el.dataset.name.includes(q) || el.dataset.number.includes(q)
+    );
+
+    if (!matches.length) {
+      dropdown.innerHTML = '<div class="paw-search-empty">No paws found</div>';
+      dropdown.hidden = false;
+      return;
+    }
+
+    dropdown.innerHTML = matches.slice(0, 8).map((el, i) => {
+      const name = el.querySelector('.paw-entry-name')?.textContent || '';
+      const flag = el.querySelector('.paw-entry-flag')?.textContent || '';
+      const num  = el.querySelector('.paw-entry-number')?.textContent || '';
+      return `<button class="paw-search-result" data-index="${entries.indexOf(el)}" tabindex="0">
+        <span class="psr-flag">${flag}</span>
+        <span class="psr-name">${name}</span>
+        ${num ? `<span class="psr-num">${num}</span>` : ''}
+      </button>`;
+    }).join('');
+
+    dropdown.querySelectorAll('.paw-search-result').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.index);
+        this.jumpToEntry(entries[idx]);
+        document.getElementById('paw-search').value = '';
+        this.closeDropdown(dropdown);
+      });
     });
-    if (this.mode === 'mosaic') requestAnimationFrame(() => this.layoutMosaic());
+
+    dropdown.hidden = false;
+  },
+
+  jumpToEntry(el) {
+    // Switch to scroll mode so we can scroll to it
+    const btnScroll = document.getElementById('mode-scroll');
+    if (this.mode !== 'scroll' && btnScroll) btnScroll.click();
+
+    // Find matching element in scroll track
+    setTimeout(() => {
+      const track = this.track;
+      track.scrollTo({ left: el.offsetLeft - track.offsetWidth / 2 + el.offsetWidth / 2, behavior: 'smooth' });
+      // Highlight
+      document.querySelectorAll('.paw-entry--found').forEach(e => e.classList.remove('paw-entry--found'));
+      el.classList.add('paw-entry--found');
+      setTimeout(() => el.classList.remove('paw-entry--found'), 2500);
+    }, 100);
+  },
+
+  closeDropdown(dropdown) {
+    dropdown.hidden = true;
+    dropdown.innerHTML = '';
   },
 };
 

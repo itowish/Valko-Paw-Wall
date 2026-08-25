@@ -212,6 +212,7 @@ const PawWallRenderer = {
     this.initDragScroll();
     this.initArrows();
     this.initModeSwitcher();
+    this.initSearch();
   },
 
   async render() {
@@ -321,6 +322,8 @@ const PawWallRenderer = {
     el.setAttribute('role', 'listitem');
     el.setAttribute('aria-label', `Paw entry by ${entry.hunterName}`);
     el.setAttribute('tabindex', '0');
+    el.setAttribute('data-name', (entry.hunterName || '').toLowerCase());
+    el.setAttribute('data-number', (entry.hunterNumber || '').toLowerCase());
     el.style.setProperty('--rotation', `${rotation}deg`);
     el.style.animationDelay = `${Math.min(index * 30, 600)}ms`;
 
@@ -470,6 +473,22 @@ const PawWallRenderer = {
 
     btnScroll.addEventListener('click', () => activate('scroll'));
     btnMosaic.addEventListener('click', () => activate('mosaic'));
+  },
+
+  initSearch() {
+    const input = document.getElementById('paw-search');
+    if (!input) return;
+    input.addEventListener('input', () => this.filterEntries(input.value));
+  },
+
+  filterEntries(query) {
+    const q = query.trim().toLowerCase();
+    document.querySelectorAll('.paw-entry').forEach(el => {
+      if (!q) { el.hidden = false; return; }
+      const match = el.dataset.name.includes(q) || el.dataset.number.includes(q);
+      el.hidden = !match;
+    });
+    if (this.mode === 'mosaic') requestAnimationFrame(() => this.layoutMosaic());
   },
 };
 

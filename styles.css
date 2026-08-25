@@ -508,6 +508,19 @@ button {
   height: 80px;
 }
 
+.count-wave {
+  display: block;
+  background: #071a1a;
+  margin-top: -2px;
+  line-height: 0;
+}
+
+.count-wave svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
 /* ----------------------------------------------------------------
    FLOATING PAWS (decorative — hero only)
 ---------------------------------------------------------------- */
@@ -673,13 +686,13 @@ button {
 }
 
 /* Alternating dark backgrounds for visual rhythm */
-.intro-section    { background: var(--bg-mid-dark); }
-.how-it-works     { background: var(--bg-section); }
-.leave-your-paw   { background: var(--bg-mid-dark); }
-.paw-wall-section { background: var(--bg-section-alt); }
-.world-section    { background: var(--bg-mid-dark); }
-.event-info       { background: var(--bg-section); }
-.memories-teaser  { background: #c2dede; }
+.intro-section    { background: #0a2020; }
+.how-it-works     { background: #0f2c2c; }
+.leave-your-paw   { background: #163838; }
+.paw-wall-section { background: #1f4848; }
+.world-section    { background: #285a5a; }
+.event-info       { background: #f0fafa; }
+.memories-teaser  { background: #ffffff; }
 
 /* ----------------------------------------------------------------
    2. PROJECT INTRODUCTION
@@ -1037,7 +1050,7 @@ button {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: rgba(2, 8, 8, 0.35); /* deep dark overlay on the section bg */
+  background: rgba(15, 40, 40, 0.25);
 }
 
 /* Left/right fade edges */
@@ -1053,12 +1066,12 @@ button {
 
 .paw-wall-track-wrap::before {
   left: 0;
-  background: linear-gradient(to right, var(--bg-section-alt), transparent);
+  background: linear-gradient(to right, #1f4848, transparent);
 }
 
 .paw-wall-track-wrap::after {
   right: 0;
-  background: linear-gradient(to left, var(--bg-section-alt), transparent);
+  background: linear-gradient(to left, #1f4848, transparent);
 }
 
 .paw-wall-track {
@@ -1509,6 +1522,30 @@ button {
   color: var(--text-on-dark-muted);
   font-style: italic;
 }
+
+/* Light mode overrides for event-info section */
+.event-info .section-title     { color: var(--text-dark); }
+.event-info .event-date        { color: #0a8f8f; }
+.event-info .slot-time         { color: var(--text-dark); }
+.event-info .slot-label        { color: var(--text-muted); }
+.event-info .slot-copy         { color: var(--text-mid); }
+.event-info .slot-location     { color: var(--text-mid); }
+.event-info .slot-note         { color: var(--text-muted); }
+.event-info .event-warning p   { color: var(--text-mid); }
+.event-info .event-disclaimer  { color: var(--text-muted); }
+.event-info .slot-onsite {
+  background: rgba(10,191,191,0.08);
+  border-color: rgba(10,191,191,0.3);
+}
+.event-info .slot-offsite {
+  background: rgba(200,241,53,0.08);
+  border-color: rgba(160,193,42,0.3);
+}
+.event-info .event-warning {
+  background: rgba(180,150,30,0.07);
+  border-color: rgba(180,150,30,0.25);
+}
+.event-info::before { display: none; }
 
 /* ----------------------------------------------------------------
    8. GAMESCOM MEMORIES TEASER  (light section)
@@ -2089,7 +2126,7 @@ button {
 ---------------------------------------------------------------- */
 /* ---- PACK COUNT SECTION ---- */
 .pack-count-section {
-  background: var(--bg-mid-dark);
+  background: #071a1a;
   padding: 5rem 1.5rem 5.5rem;
   text-align: center;
   position: relative;

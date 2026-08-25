@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Gamescom Memories · Valko Paw Wall · Pack Print Project</title>
+  <meta name="description" content="Photos from the Valko Paw Wall at Gamescom 2026 — physical wall, hunters, paw prints, and meetup moments." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="gamescom.css" />
+</head>
+<body class="gamescom-page">
+
+  <!-- Navigation -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">
+        <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="nav-logo" />
+      </a>
+      <div class="nav-links">
+        <a href="index.html#paw-wall" class="nav-link">Paw Wall</a>
+        <a href="gamescom.html" class="nav-link nav-link-active">Gamescom</a>
+        <a href="index.html#leave-your-paw" class="nav-cta">Leave Your Paw</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Hero -->
+  <header class="gc-hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-glow"></div>
+    <div class="floating-paws" aria-hidden="true">
+      <span class="fp fp-1"></span>
+      <span class="fp fp-2"></span>
+      <span class="fp fp-3"></span>
+      <span class="fp fp-4"></span>
+    </div>
+    <div class="gc-hero-content">
+      <p class="hero-eyebrow">Pack Print Project · Gamescom 2026</p>
+      <h1 class="gc-hero-title">Gamescom Memories</h1>
+      <p class="gc-hero-sub">The Paw Wall. The Pack. The moments.</p>
+    </div>
+  </header>
+
+
+  <!-- Category tabs -->
+  <nav class="gc-tabs-nav" id="gc-tabs-nav" aria-label="Gallery categories">
+    <div class="gc-tabs-inner" id="gc-tabs">
+      <!-- Tabs injected by JS from gamescom-gallery.js -->
+    </div>
+  </nav>
+
+
+  <!-- Gallery sections — one per category, injected by JS -->
+  <main class="gc-main" id="gc-main">
+    <!-- Placeholder shown before/when no images are available -->
+    <div class="gc-placeholder" id="gc-placeholder">
+      <div class="gc-placeholder-inner">
+        <span class="gc-placeholder-icon" aria-hidden="true">📸</span>
+        <h2 class="gc-placeholder-title">Photos coming soon</h2>
+        <p class="gc-placeholder-body">
+          The gallery will be filled with memories from Gamescom 2026 after the event.<br />
+          Check back on August 30!
+        </p>
+        <a href="index.html" class="btn btn-secondary">Back to the Paw Wall</a>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- Lightbox overlay -->
+  <div class="gc-lightbox" id="gc-lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+    <button class="gc-lb-close" id="gc-lb-close" aria-label="Close photo">✕</button>
+    <button class="gc-lb-prev" id="gc-lb-prev" aria-label="Previous photo">&#8592;</button>
+    <button class="gc-lb-next" id="gc-lb-next" aria-label="Next photo">&#8594;</button>
+    <div class="gc-lb-img-wrap">
+      <img src="" alt="" id="gc-lb-img" />
+    </div>
+    <p class="gc-lb-caption" id="gc-lb-caption"></p>
+  </div>
+
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="footer-logo" />
+        <p class="footer-sub">Valko Paw Wall · Gamescom 2026</p>
+        <p class="footer-credit">Concept &amp; Design by Wish</p>
+        <p class="footer-credit footer-credit-lds">In collaboration with Love and Deepspace Germany</p>
+        <p class="footer-disclaimer">
+          This is a private, non-commercial fan project and is not officially affiliated with gamescom GmbH or Infold Games.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="data/gamescom-gallery.js"></script>
+  <script src="gamescom.js"></script>
+</body>
+</html>

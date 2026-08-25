@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Valko Paw Wall · Pack Print Project · Gamescom 2026</title>
+  <meta name="description" content="Leave your paw. Leave your mark. A digital fan wall for Valko at Gamescom 2026." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo-link" aria-label="Back to top">
+        <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="nav-logo" />
+      </a>
+      <div class="nav-links">
+        <a href="#paw-wall" class="nav-link">Paw Wall</a>
+        <a href="gamescom.html" class="nav-link">Gamescom</a>
+        <a href="#leave-your-paw" class="nav-cta">Leave Your Paw</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+       1. HERO / INTRO  — DO NOT MODIFY
+  ============================================================ -->
+  <section class="hero" id="hero">
+    <!-- Decorative background elements -->
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-glow"></div>
+
+    <!-- Floating paw decorations -->
+    <div class="floating-paws" aria-hidden="true">
+      <span class="fp fp-1"></span>
+      <span class="fp fp-2"></span>
+      <span class="fp fp-3"></span>
+      <span class="fp fp-4"></span>
+      <span class="fp fp-5"></span>
+      <span class="fp fp-6"></span>
+      <span class="fp fp-7"></span>
+      <span class="fp fp-8"></span>
+      <span class="fp fp-9"></span>
+      <span class="fp fp-10"></span>
+      <span class="fp fp-11"></span>
+      <span class="fp fp-12"></span>
+    </div>
+
+    <!-- Spark decorations -->
+    <div class="sparks" aria-hidden="true">
+      <span class="spark s1"></span>
+      <span class="spark s2"></span>
+      <span class="spark s3"></span>
+      <span class="spark s4"></span>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-visual" id="hero-visual">
+        <!-- Large 3D coin: Valko Paw Wall Badge (front) ↔ Pack Print Project logo (back) -->
+        <div class="hero-coin" aria-label="Valko Paw Wall coin">
+          <div class="hero-coin-inner">
+            <div class="coin-face coin-front">
+              <img src="assets/images/valko-paw-wall-badge.png" alt="Valko Paw Wall · Gamescom 2026" />
+            </div>
+            <div class="coin-face coin-back">
+              <img src="assets/images/valko-coin.png" alt="Valko" />
+            </div>
+            <div class="coin-rim"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-text">
+        <p class="hero-eyebrow">Pack Print Project presents</p>
+        <h1 class="hero-title">
+          <span class="hero-title-main">PACK PRINT</span>
+          <span class="hero-title-main">PROJECT</span>
+        </h1>
+        <h2 class="hero-subtitle">Valko Paw Wall</h2>
+        <p class="hero-tagline">Leave your paw. Leave your mark.</p>
+        <p class="hero-supporting">The Pack is still here.</p>
+
+        <div class="hero-actions">
+          <a href="#leave-your-paw" class="btn btn-primary" id="hero-cta">
+            <span class="btn-icon">🐾</span> Leave Your Paw
+          </a>
+          <a href="#paw-wall" class="btn btn-secondary">
+            Explore the Wall
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- Wave divider: hero → intro -->
+  <div class="hero-wave" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#071a1a"/>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       1b. PACK COUNT — animated paw counter
+  ============================================================ -->
+  <section class="pack-count-section dark-section" id="pack-count" aria-label="Pack count">
+    <div class="container">
+      <div class="pack-count-inner">
+        <p class="pack-count-eyebrow">The Pack So Far</p>
+        <div class="pack-count-card">
+          <img class="pack-count-paw" src="assets/images/paw.png" alt="" aria-hidden="true">
+          <span class="pack-count-number" id="pack-count-number" aria-live="polite">0</span>
+          <p class="pack-count-label">paws on the wall</p>
+          <p class="pack-count-countries" id="pack-count-countries" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. PROJECT INTRODUCTION
+  ============================================================ -->
+  <section class="intro-section dark-section" id="about">
+    <div class="container">
+      <div class="intro-inner reveal">
+        <div class="intro-deco" aria-hidden="true">
+          <span class="deco-paw dp-1"></span>
+          <span class="deco-paw dp-2"></span>
+          <span class="deco-line"></span>
+        </div>
+        <div class="intro-text">
+          <img src="assets/images/for-valko-from-the-pack.png" alt="For Valko, From The Pack" class="intro-graphic" />
+          <p class="intro-body">
+            A digital extension of the Valko Paw Wall created for Gamescom 2026.
+          </p>
+          <p class="intro-body">
+            Whether you're joining us in Cologne or supporting Valko from somewhere else in the world&thinsp;—&thinsp;you can leave your paw here.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       3. HOW IT WORKS
+  ============================================================ -->
+  <section class="how-it-works dark-section" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title reveal">How It Works</h2>
+      <div class="steps-row">
+
+        <div class="step reveal">
+          <div class="step-number">01</div>
+          <div class="step-icon" aria-hidden="true">
+            <img src="assets/images/paw.png" alt="" class="step-paw-icon" />
+          </div>
+          <p class="step-label">Step 01</p>
+          <h3 class="step-title">Leave your paw</h3>
+          <p class="step-desc">Add your mark to the digital wall — it appears for everyone to see.</p>
+        </div>
+
+        <div class="step-connector" aria-hidden="true"></div>
+
+        <div class="step reveal">
+          <div class="step-number">02</div>
+          <div class="step-icon step-icon-text" aria-hidden="true">✦</div>
+          <p class="step-label">Step 02</p>
+          <h3 class="step-title">Tell us who you are</h3>
+          <p class="step-desc">Share your Hunter Name and where in the world you're joining from.</p>
+        </div>
+
+        <div class="step-connector" aria-hidden="true"></div>
+
+        <div class="step reveal">
+          <div class="step-number">03</div>
+          <div class="step-icon step-icon-text" aria-hidden="true">♡</div>
+          <p class="step-label">Step 03</p>
+          <h3 class="step-title">Write a short message</h3>
+          <p class="step-desc">Leave a message for Valko — up to 300 characters, straight from the Pack.</p>
+        </div>
+
+      </div>
+      <p class="steps-note reveal">Your paw appears on the wall for everyone to see.</p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       4. LEAVE YOUR PAW (CTA section)
+  ============================================================ -->
+  <section class="leave-your-paw dark-section" id="leave-your-paw">
+    <div class="container">
+      <div class="lyp-inner reveal">
+        <div class="lyp-sparks" aria-hidden="true">
+          <span class="spark lyp-s1"></span>
+          <span class="spark lyp-s2"></span>
+        </div>
+        <h2 class="section-title">Join the Pack</h2>
+        <p class="lyp-sub">Add your paw to the wall and leave a message for Valko.</p>
+        <button class="btn btn-primary btn-large" id="open-form-btn" aria-haspopup="dialog">
+          <span class="btn-icon">🐾</span> + Leave Your Paw
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SUBMISSION ANIMATION OVERLAY
+  ============================================================ -->
+  <div class="stamp-overlay" id="stamp-overlay" aria-live="polite" aria-hidden="true">
+    <div class="stamp-inner">
+      <div class="stamp-paw" id="stamp-paw">
+        <img src="assets/images/paw.png" alt="Paw stamp" />
+      </div>
+      <p class="stamp-message">Your paw has joined the Pack. 🐾</p>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       5. THE DIGITAL VALKO PAW WALL
+  ============================================================ -->
+  <section class="paw-wall-section dark-section" id="paw-wall">
+    <div class="paw-wall-header-wrap">
+      <div class="container">
+        <div class="paw-wall-header reveal">
+          <div class="paw-wall-title-group">
+            <h2 class="section-title">The Valko Paw Wall</h2>
+            <p class="paw-counter">
+              <span class="counter-number" id="paw-count">0</span>
+              <span class="counter-label"> paws and counting</span>
+            </p>
+          </div>
+          <div class="paw-wall-controls" aria-label="Wall navigation">
+            <!-- Mode toggles -->
+            <div class="wall-mode-toggle" role="group" aria-label="Wall display mode">
+              <button class="wall-mode-btn active" id="mode-scroll" aria-pressed="true" title="Scroll mode">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <rect x="1" y="5" width="3" height="6" rx="1" fill="currentColor"/>
+                  <rect x="6" y="3" width="3" height="10" rx="1" fill="currentColor"/>
+                  <rect x="11" y="5" width="3" height="6" rx="1" fill="currentColor"/>
+                  <path d="M0 8 L2 6 M14 8 L16 6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                Scroll
+              </button>
+              <button class="wall-mode-btn" id="mode-mosaic" aria-pressed="false" title="Full wall mode">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <rect x="1" y="1" width="6" height="6" rx="1" fill="currentColor" opacity="0.7"/>
+                  <rect x="9" y="1" width="6" height="4" rx="1" fill="currentColor"/>
+                  <rect x="1" y="9" width="4" height="6" rx="1" fill="currentColor"/>
+                  <rect x="7" y="9" width="8" height="6" rx="1" fill="currentColor" opacity="0.7"/>
+                </svg>
+                Wall
+              </button>
+            </div>
+            <!-- Scroll arrows (scroll mode only) -->
+            <button class="wall-arrow wall-arrow-left" id="wall-left" aria-label="Scroll left">&#8592;</button>
+            <button class="wall-arrow wall-arrow-right" id="wall-right" aria-label="Scroll right">&#8594;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width horizontal drag-scroll wall -->
+    <div class="paw-wall-track-wrap" id="paw-wall-scroll-wrap">
+      <div class="paw-wall-track" id="paw-wall-track" role="list" aria-label="Valko Paw Wall entries">
+        <!-- Paw entries injected by JS — oldest left, newest right -->
+      </div>
+    </div>
+
+    <!-- Full mosaic wall (all paws at once) -->
+    <div class="paw-wall-mosaic-wrap" id="paw-wall-mosaic-wrap" aria-hidden="true">
+      <div class="paw-wall-mosaic" id="paw-wall-mosaic" role="list" aria-label="Valko Paw Wall — full view">
+        <!-- Mosaic paw entries injected by JS -->
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       6. THE PACK AROUND THE WORLD
+  ============================================================ -->
+  <section class="world-section dark-section" id="world">
+    <div class="container">
+      <div class="world-header reveal">
+        <h2 class="section-title">The Pack Around the World</h2>
+        <p class="world-sub">Hunters joining from every corner of the globe.</p>
+      </div>
+      <div class="world-map-wrap reveal">
+        <div class="world-map" id="world-map" aria-label="World map showing Pack locations">
+          <!-- SVG world map with country dots, injected by JS -->
+        </div>
+        <div class="world-stats" id="world-stats">
+          <!-- Country count injected by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       7. GAMESCOM INFORMATION
+  ============================================================ -->
+  <section class="event-info dark-section" id="event-info">
+    <div class="container">
+      <div class="event-header reveal">
+        <img src="assets/images/valko-paw-wall-badge.png" alt="Valko Paw Wall Badge" class="event-badge" />
+        <div>
+          <h2 class="section-title">Valko Paw Wall · Gamescom 2026</h2>
+          <p class="event-date">Saturday, August 29</p>
+        </div>
+      </div>
+
+      <div class="event-slots reveal">
+
+        <!-- On-site slot -->
+        <div class="event-slot slot-onsite">
+          <div class="slot-tag">ON-SITE</div>
+          <div class="slot-body">
+            <p class="slot-time">2:30 – 3:00 PM</p>
+            <p class="slot-location">Gamescom grounds · next to Hall 9</p>
+          </div>
+        </div>
+
+        <!-- Off-site slot -->
+        <div class="event-slot slot-offsite">
+          <div class="slot-tag">OFF-SITE</div>
+          <div class="slot-body">
+            <p class="slot-label">Can't make the on-site slot?</p>
+            <p class="slot-copy">The banner will also be available during the Love and Deepspace Germany offsite meetup.</p>
+            <p class="slot-time">From 6:00 PM</p>
+            <p class="slot-location">Kennedy-Ufer 11</p>
+            <p class="slot-note">Approx. 15-minute walk from the Gamescom venue</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="event-warning reveal">
+        <span class="warning-icon" aria-hidden="true">⚠</span>
+        <p>Once you leave the Gamescom grounds, re-entry may not be possible. Please plan accordingly.</p>
+      </div>
+
+      <p class="event-disclaimer reveal">
+        This is a private fan project and is not officially organized by or affiliated with Gamescom.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       8. GAMESCOM MEMORIES TEASER
+  ============================================================ -->
+  <section class="memories-teaser dark-section" id="memories">
+    <div class="container">
+      <div class="memories-inner reveal">
+        <div class="memories-text">
+          <p class="memories-eyebrow">After the event</p>
+          <h2 class="section-title">Gamescom Memories</h2>
+          <p class="memories-body">
+            Photos from the physical Paw Wall, the meetup, and everything the Pack experienced together — all gathered in one place.
+          </p>
+          <a href="gamescom.html" class="btn btn-secondary memories-btn">
+            View the Gallery
+          </a>
+        </div>
+        <div class="memories-visual" aria-hidden="true">
+          <div class="memories-icon-grid">
+            <span class="mi mi-1">📸</span>
+            <span class="mi mi-2">🐾</span>
+            <span class="mi mi-3">🎮</span>
+            <span class="mi mi-4">♡</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       9. FOOTER
+  ============================================================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="footer-logo" />
+        <p class="footer-sub">Valko Paw Wall · Gamescom 2026</p>
+        <p class="footer-credit">Concept &amp; Design by Wish</p>
+        <p class="footer-credit footer-credit-lds">In collaboration with Love and Deepspace Germany</p>
+        <p class="footer-disclaimer">
+          This is a private, non-commercial fan project and is not officially affiliated with gamescom GmbH or Infold Games. All respective rights belong to their owners.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+       MODAL — LEAVE YOUR PAW FORM
+  ============================================================ -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close form">
+        <span aria-hidden="true">✕</span>
+      </button>
+
+      <div class="modal-header">
+        <img src="assets/images/paw.png" alt="" class="modal-paw-icon" aria-hidden="true" />
+        <h2 class="modal-title" id="modal-title">Leave Your Paw</h2>
+        <p class="modal-sub">Join the Pack. Leave your mark for Valko.</p>
+      </div>
+
+      <form class="paw-form" id="paw-form" novalidate>
+
+        <!-- Honeypot (hidden from real users, catches bots) -->
+        <div class="form-honeypot" aria-hidden="true">
+          <label for="field-website">Website</label>
+          <input type="text" id="field-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- Hunter Name -->
+        <div class="form-group">
+          <label class="form-label" for="field-name">
+            Hunter Name <span class="required-mark" aria-label="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="field-name"
+            name="hunterName"
+            class="form-input"
+            placeholder="Your Hunter Name"
+            maxlength="60"
+            autocomplete="off"
+            required
+          />
+          <span class="form-error" id="error-name" role="alert"></span>
+        </div>
+
+        <!-- Hunter Number -->
+        <div class="form-group">
+          <label class="form-label" for="field-number">
+            Hunter Number / Hunter ID <span class="optional-mark">(optional)</span>
+          </label>
+          <input
+            type="text"
+            id="field-number"
+            name="hunterNumber"
+            class="form-input"
+            placeholder="e.g. #00001"
+            maxlength="20"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Country -->
+        <div class="form-group">
+          <label class="form-label" for="field-country">
+            Country <span class="optional-mark">(optional)</span>
+          </label>
+          <div class="country-select-wrap">
+            <input
+              type="text"
+              id="field-country"
+              name="countrySearch"
+              class="form-input"
+              placeholder="Search your country…"
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-autocomplete="list"
+              aria-controls="country-listbox"
+            />
+            <ul class="country-dropdown" id="country-listbox" role="listbox" aria-label="Country suggestions"></ul>
+          </div>
+          <input type="hidden" id="field-country-code" name="countryCode" />
+          <input type="hidden" id="field-country-name" name="countryName" />
+        </div>
+
+        <!-- Message -->
+        <div class="form-group">
+          <label class="form-label" for="field-message">
+            Message for Valko <span class="optional-mark">(optional)</span>
+          </label>
+          <textarea
+            id="field-message"
+            name="message"
+            class="form-textarea"
+            placeholder="Write something for Valko… (max 300 characters)"
+            maxlength="300"
+            rows="4"
+          ></textarea>
+          <span class="char-counter" id="char-counter" aria-live="polite">0 / 300</span>
+        </div>
+
+        <!-- Consent note -->
+        <p class="form-consent">
+          Your paw and name will be publicly visible on the wall. Please keep messages respectful.
+        </p>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+          <span class="btn-icon">🐾</span> ADD MY PAW
+        </button>
+
+        <!-- Cooldown message (hidden by default) -->
+        <p class="form-cooldown" id="form-cooldown" aria-live="polite"></p>
+
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       PAW MESSAGE OVERLAY (click on a paw to view)
+  ============================================================ -->
+  <div class="paw-detail-overlay" id="paw-detail-overlay" role="dialog" aria-modal="true" aria-labelledby="detail-title" aria-hidden="true">
+    <div class="paw-detail-card" id="paw-detail-card">
+      <button class="modal-close detail-close" id="detail-close" aria-label="Close">
+        <span aria-hidden="true">✕</span>
+      </button>
+      <div class="detail-paw-icon" aria-hidden="true">
+        <img src="assets/images/paw.png" alt="" />
+      </div>
+      <h3 class="detail-name" id="detail-name"></h3>
+      <p class="detail-number" id="detail-number"></p>
+      <p class="detail-country" id="detail-country"></p>
+      <blockquote class="detail-message" id="detail-message"></blockquote>
+      <p class="detail-origin" id="detail-origin"></p>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       AUDIO SYSTEM
+       Two tracks: hero ambience + paw wall track.
+       Volumes are driven by scroll position — no autoplay.
+  ============================================================ -->
+
+  <!-- Track A: Tameless Territory — hero section -->
+  <audio id="audio-hero" loop preload="none">
+    <source src="assets/audio/Love and Deepspace - Tameless Territory.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Track B: Wolf Forest — paw wall section -->
+  <audio id="audio-wall" loop preload="none">
+    <source src="assets/audio/wolf-forest.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Floating music toggle button (bottom-left corner) -->
+  <button
+    class="music-btn"
+    id="music-btn"
+    aria-label="Enable music"
+    title="Toggle music"
+    aria-pressed="false"
+  >
+    <span class="music-btn-icon music-icon-off" aria-hidden="true">
+      <!-- Muted note -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3 6.5H1.5A.5.5 0 0 0 1 7v4a.5.5 0 0 0 .5.5H3l3 3V3.5L3 6.5Z" fill="currentColor"/>
+        <path d="M14 3L4 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="music-btn-icon music-icon-on" aria-hidden="true" style="display:none">
+      <!-- Sound waves -->
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3 6.5H1.5A.5.5 0 0 0 1 7v4a.5.5 0 0 0 .5.5H3l3 3V3.5L3 6.5Z" fill="currentColor"/>
+        <path d="M10 5.5a4 4 0 0 1 0 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M12.5 3a7 7 0 0 1 0 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    </span>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>

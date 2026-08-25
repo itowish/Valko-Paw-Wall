@@ -1,0 +1,333 @@
+/* ================================================================
+   PACK PRINT PROJECT — Gamescom Gallery
+   gamescom.css
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   GAMESCOM HERO
+---------------------------------------------------------------- */
+.gamescom-page {
+  background-color: var(--bg-light);
+}
+
+.gc-hero {
+  position: relative;
+  min-height: 50svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9rem 1.5rem 5rem;
+  overflow: hidden;
+  background: var(--bg-dark);
+  text-align: center;
+}
+
+.gc-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.gc-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(130deg, var(--white) 0%, var(--silver) 45%, var(--teal) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  animation: fadeSlideUp 0.8s 0.3s var(--ease) forwards;
+}
+
+.gc-hero-sub {
+  font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+  color: var(--silver-dark);
+  font-style: italic;
+  opacity: 0;
+  animation: fadeSlideUp 0.8s 0.5s var(--ease) forwards;
+}
+
+/* ----------------------------------------------------------------
+   CATEGORY TABS
+---------------------------------------------------------------- */
+.gc-tabs-nav {
+  position: sticky;
+  top: 60px;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(10,191,191,0.15);
+  padding: 0 1.5rem;
+}
+
+.gc-tabs-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.gc-tabs-inner::-webkit-scrollbar { display: none; }
+
+.gc-tab {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 1rem 1.4rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.gc-tab:hover { color: var(--teal-dark); }
+
+.gc-tab.active {
+  color: var(--teal-dark);
+  border-bottom-color: var(--teal);
+}
+
+/* ----------------------------------------------------------------
+   MAIN GALLERY AREA
+---------------------------------------------------------------- */
+.gc-main {
+  min-height: 60vh;
+  padding: 3rem 1.5rem 6rem;
+  max-width: var(--container);
+  margin: 0 auto;
+  background: var(--bg-light);
+}
+
+/* ---- Placeholder ---- */
+.gc-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.gc-placeholder-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 440px;
+}
+
+.gc-placeholder-icon {
+  font-size: 3.5rem;
+  opacity: 0.3;
+}
+
+.gc-placeholder-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.gc-placeholder-body {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ---- Category section ---- */
+.gc-category {
+  display: none;
+  animation: fadeSlideUp 0.4s var(--ease) both;
+}
+
+.gc-category.active {
+  display: block;
+}
+
+.gc-category-title {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(10,191,191,0.15);
+  margin-bottom: 1.5rem;
+}
+
+.gc-category-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* ---- Masonry-style grid ---- */
+.gc-grid {
+  columns: 3 280px;
+  gap: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .gc-grid { columns: 2 140px; gap: 0.6rem; }
+}
+
+.gc-grid-item {
+  break-inside: avoid;
+  margin-bottom: 0.85rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-light-2);
+}
+
+.gc-grid-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s var(--ease);
+}
+
+.gc-grid-item:hover img {
+  transform: scale(1.04);
+}
+
+.gc-grid-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4,15,15,0.65) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.75rem 1rem;
+}
+
+.gc-grid-item:hover .gc-grid-item-overlay {
+  opacity: 1;
+}
+
+.gc-grid-item-caption {
+  font-size: 0.75rem;
+  color: var(--white);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ---- Category placeholder (per-category) ---- */
+.gc-cat-placeholder {
+  border: 1.5px dashed rgba(10,191,191,0.2);
+  border-radius: var(--radius-lg);
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-style: italic;
+  background: var(--bg-white);
+}
+
+/* ----------------------------------------------------------------
+   LIGHTBOX
+---------------------------------------------------------------- */
+.gc-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(4, 15, 15, 0.96);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease);
+}
+
+.gc-lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gc-lb-img-wrap {
+  max-width: 90vw;
+  max-height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gc-lb-img-wrap img {
+  max-width: 100%;
+  max-height: 82vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+}
+
+.gc-lb-close,
+.gc-lb-prev,
+.gc-lb-next {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10,191,191,0.1);
+  border: 1.5px solid rgba(10,191,191,0.2);
+  color: var(--teal);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.gc-lb-close { top: 1.25rem; right: 1.25rem; }
+.gc-lb-prev  { left: 1.25rem; top: 50%; transform: translateY(-50%); }
+.gc-lb-next  { right: 1.25rem; top: 50%; transform: translateY(-50%); }
+
+.gc-lb-close:hover,
+.gc-lb-prev:hover,
+.gc-lb-next:hover {
+  background: rgba(10,191,191,0.2);
+}
+
+.gc-lb-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--silver-dark);
+  font-style: italic;
+  max-width: 600px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Active nav link */
+.nav-link-active {
+  color: var(--teal) !important;
+}
+
+/* On the gamescom page the footer needs light top border to separate from light content */
+.gamescom-page .site-footer {
+  border-top-color: rgba(10,191,191,0.2);
+}

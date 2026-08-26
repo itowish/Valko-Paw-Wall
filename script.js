@@ -183,12 +183,12 @@ const COUNTRIES = [
   { code: 'BD', name: 'Bangladesh' }, { code: 'BY', name: 'Belarus' }, { code: 'BE', name: 'Belgium' },
   { code: 'BO', name: 'Bolivia' }, { code: 'BA', name: 'Bosnia and Herzegovina' }, { code: 'BR', name: 'Brazil' },
   { code: 'BG', name: 'Bulgaria' }, { code: 'CA', name: 'Canada' }, { code: 'CL', name: 'Chile' },
-  { code: 'CN', name: 'China' }, { code: 'CO', name: 'Colombia' }, { code: 'HR', name: 'Croatia' },
+  { code: 'CN', name: 'China' }, { code: 'MO', name: 'China · Macao SAR', aliases: ['macao', 'macau'] }, { code: 'CO', name: 'Colombia' }, { code: 'HR', name: 'Croatia' },
   { code: 'CY', name: 'Cyprus' }, { code: 'CZ', name: 'Czech Republic' }, { code: 'DK', name: 'Denmark' },
   { code: 'EC', name: 'Ecuador' }, { code: 'EG', name: 'Egypt' }, { code: 'EE', name: 'Estonia' },
   { code: 'FI', name: 'Finland' }, { code: 'FR', name: 'France' }, { code: 'GE', name: 'Georgia' },
   { code: 'DE', name: 'Germany' }, { code: 'GH', name: 'Ghana' }, { code: 'GR', name: 'Greece' },
-  { code: 'HK', name: 'Hong Kong' }, { code: 'HU', name: 'Hungary' }, { code: 'IN', name: 'India' },
+  { code: 'HK', name: 'China · Hong Kong SAR', aliases: ['hong kong'] }, { code: 'HU', name: 'Hungary' }, { code: 'IN', name: 'India' },
   { code: 'ID', name: 'Indonesia' }, { code: 'IE', name: 'Ireland' }, { code: 'IL', name: 'Israel' },
   { code: 'IT', name: 'Italy' }, { code: 'JP', name: 'Japan' }, { code: 'JO', name: 'Jordan' },
   { code: 'KZ', name: 'Kazakhstan' }, { code: 'KE', name: 'Kenya' }, { code: 'KW', name: 'Kuwait' },
@@ -202,19 +202,33 @@ const COUNTRIES = [
   { code: 'RU', name: 'Russia' }, { code: 'SA', name: 'Saudi Arabia' }, { code: 'RS', name: 'Serbia' },
   { code: 'SG', name: 'Singapore' }, { code: 'SK', name: 'Slovakia' }, { code: 'SI', name: 'Slovenia' },
   { code: 'ZA', name: 'South Africa' }, { code: 'KR', name: 'South Korea' }, { code: 'ES', name: 'Spain' },
-  { code: 'SE', name: 'Sweden' }, { code: 'CH', name: 'Switzerland' }, { code: 'TW', name: 'Taiwan' },
+  { code: 'SE', name: 'Sweden' }, { code: 'CH', name: 'Switzerland' }, { code: 'TW', name: 'China · Taiwan', aliases: ['taiwan'] },
   { code: 'TH', name: 'Thailand' }, { code: 'TR', name: 'Turkey' }, { code: 'UA', name: 'Ukraine' },
   { code: 'AE', name: 'United Arab Emirates' }, { code: 'GB', name: 'United Kingdom' },
   { code: 'US', name: 'United States' }, { code: 'UY', name: 'Uruguay' }, { code: 'VE', name: 'Venezuela' },
   { code: 'VN', name: 'Vietnam' },
 ];
 
-/** Returns an emoji flag for an ISO 3166-1 alpha-2 country code */
+/** Returns an emoji flag for an ISO 3166-1 alpha-2 country code.
+ *  HK, MO, TW display the Chinese flag per project policy. */
 function countryFlag(code) {
   if (!code || code.length !== 2) return '';
+  const upper = code.toUpperCase();
+  const flagCode = ['HK', 'MO', 'TW'].includes(upper) ? 'CN' : upper;
   return String.fromCodePoint(
-    ...code.toUpperCase().split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)
+    ...flagCode.split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65)
   );
+}
+
+/** Maps a stored country code/name to the correct display name.
+ *  Does NOT modify the database — display only. */
+function displayCountryName(code, name) {
+  const upper = (code || '').toUpperCase();
+  const lower = (name || '').toLowerCase();
+  if (upper === 'HK' || lower.includes('hong kong')) return 'China · Hong Kong SAR';
+  if (upper === 'MO' || lower.includes('macao') || lower.includes('macau')) return 'China · Macao SAR';
+  if (upper === 'TW' || lower === 'taiwan') return 'China · Taiwan';
+  return name || '';
 }
 
 
@@ -454,14 +468,15 @@ const PawWallRenderer = {
     el.style.setProperty('--stamp-delay', `${Math.min(index * 30, 600)}ms`);
     el.style.setProperty('--bob-delay',   `${Math.min(index * 30, 600) + 500 + (index * 317 % 2000)}ms`);
 
-    const flag = entry.countryCode ? countryFlag(entry.countryCode) : '';
+    const flag        = entry.countryCode ? countryFlag(entry.countryCode) : '';
+    const displayName = displayCountryName(entry.countryCode, entry.countryName);
 
     el.innerHTML = `
       <div class="paw-img-wrap">
         <img src="assets/images/paw.png" alt="" width="${size}" height="${size}" loading="lazy" />
       </div>
       <span class="paw-entry-name">${escapeHtml(entry.hunterName)}</span>
-      ${flag ? `<span class="paw-entry-flag" aria-label="${escapeHtml(entry.countryName || '')}">${flag}</span>` : ''}
+      ${flag ? `<span class="paw-entry-flag" aria-label="${escapeHtml(displayName)}">${flag}</span>` : ''}
       ${entry.hunterNumber ? `<span class="paw-entry-number">${escapeHtml(entry.hunterNumber)}</span>` : ''}
     `;
 
@@ -1085,10 +1100,12 @@ const CountrySelect = {
     input.addEventListener('input', () => {
       const q = input.value.trim().toLowerCase();
       if (!q) { hide(); return; }
-      const matches = COUNTRIES.filter(c =>
-        c.name.toLowerCase().startsWith(q) ||
-        c.code.toLowerCase() === q
-      ).slice(0, 8);
+      const matches = COUNTRIES.filter(c => {
+        const q_lower = q.toLowerCase();
+        return c.name.toLowerCase().startsWith(q_lower) ||
+          c.code.toLowerCase() === q_lower ||
+          (c.aliases && c.aliases.some(a => a.startsWith(q_lower)));
+      }).slice(0, 8);
       show(matches);
       this.selectedCode = '';
       this.selectedName = '';
@@ -1160,7 +1177,9 @@ const PawDetail = {
     if (!this.overlay) return;
 
     const flag = entry.countryCode ? countryFlag(entry.countryCode) : '';
-    const countryDisplay = entry.countryName ? `${flag} ${entry.countryName}` : '';
+    const countryDisplay = entry.countryName
+      ? `${flag} ${displayCountryName(entry.countryCode, entry.countryName)}`.trim()
+      : '';
 
     document.getElementById('detail-name').textContent    = entry.hunterName;
     document.getElementById('detail-number').textContent  = entry.hunterNumber || '';

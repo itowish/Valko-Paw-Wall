@@ -31,10 +31,11 @@ const StorageLayer = {
 
   /** Return all visible paw entries, oldest first */
   async getAll() {
+    // Fetches minimal fields — used by world map + counter (not for wall rendering)
     if (USE_SUPABASE) {
       try {
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&select=*`,
+          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&select=id,created_at,country_code,country_name`,
           { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
@@ -48,6 +49,45 @@ const StorageLayer = {
       const raw = localStorage.getItem(this.STORAGE_KEY);
       return raw ? JSON.parse(raw) : [];
     } catch { return []; }
+  },
+
+  /** Paginated full paw data — used by the wall renderer */
+  async getPaws(offset = 0, limit = 100) {
+    if (USE_SUPABASE) {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&limit=${limit}&offset=${offset}&select=*`,
+          { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+        if (!res.ok) throw new Error(`Supabase ${res.status}`);
+        const rows = await res.json();
+        return rows.map(r => this._normaliseRow(r));
+      } catch (err) {
+        console.warn('Supabase getPaws failed:', err);
+        return [];
+      }
+    }
+    const all = await this.getAll();
+    return all.slice(offset, offset + limit);
+  },
+
+  /** Total entry count — efficient single query */
+  async getCount() {
+    if (USE_SUPABASE) {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/paw_entries?select=id&limit=1`,
+          { headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Prefer: 'count=exact',
+          }}
+        );
+        const range = res.headers.get('Content-Range'); // e.g. "0-0/2000"
+        return parseInt(range?.split('/')[1] ?? '0', 10) || 0;
+      } catch { return 0; }
+    }
+    return (await this.getAll()).length;
   },
 
   /** Persist a new entry and return the saved object */
@@ -186,6 +226,12 @@ const PawWallRenderer = {
   mosaicViewport: null,
   mode: 'scroll', // 'scroll' | 'mosaic'
 
+  // Pagination state
+  _pawOffset: 0,
+  _allLoaded: false,
+  _loadingMore: false,
+  PAW_BATCH: 100,
+
   // Pan state for mosaic
   _panX: 0,
   _panY: 0,
@@ -206,7 +252,18 @@ const PawWallRenderer = {
 
   async render() {
     if (!this.track) return;
-    const entries = await StorageLayer.getAll();
+
+    // Reset pagination
+    this._pawOffset = 0;
+    this._allLoaded = false;
+
+    const [entries, total] = await Promise.all([
+      StorageLayer.getPaws(0, this.PAW_BATCH),
+      StorageLayer.getCount(),
+    ]);
+
+    this._pawOffset = entries.length;
+    if (entries.length < this.PAW_BATCH) this._allLoaded = true;
 
     this.track.innerHTML  = '';
     if (this.mosaic) this.mosaic.innerHTML = '';
@@ -221,9 +278,31 @@ const PawWallRenderer = {
       }
     });
 
-    this.updateCounter(entries.length);
-    // Layout mosaic after DOM is ready
+    this.updateCounter(total);
     requestAnimationFrame(() => this.layoutMosaic());
+  },
+
+  async loadMore() {
+    if (this._allLoaded || this._loadingMore || !this.track) return;
+    this._loadingMore = true;
+
+    const entries = await StorageLayer.getPaws(this._pawOffset, this.PAW_BATCH);
+    if (entries.length < this.PAW_BATCH) this._allLoaded = true;
+
+    const base = this._pawOffset;
+    entries.forEach((entry, i) => {
+      const scrollEl = this.createPawElement(entry, base + i);
+      this.track.appendChild(scrollEl);
+      if (this.mosaic) {
+        const mosaicEl = this.createPawElement(entry, base + i);
+        this.mosaic.appendChild(mosaicEl);
+      }
+    });
+
+    this._pawOffset += entries.length;
+    this._loadingMore = false;
+
+    if (this.mode === 'mosaic') requestAnimationFrame(() => this.layoutMosaic());
   },
 
   /**
@@ -324,25 +403,28 @@ const PawWallRenderer = {
   },
 
   /** Add a newly submitted entry at the right end without full re-render */
-  addEntry(entry) {
+  async addEntry(entry) {
     if (!this.track) return;
 
-    const count = this.track.querySelectorAll('.paw-entry').length + 1;
+    const index = this._pawOffset;
+    this._pawOffset++;
 
     // Add to scroll wall
-    const scrollEl = this.createPawElement(entry, count - 1);
+    const scrollEl = this.createPawElement(entry, index);
     scrollEl.style.animationDelay = '0ms';
     this.track.appendChild(scrollEl);
 
     // Add to mosaic wall
     if (this.mosaic) {
-      const mosaicEl = this.createPawElement(entry, count - 1);
+      const mosaicEl = this.createPawElement(entry, index);
       mosaicEl.style.animationDelay = '0ms';
       this.mosaic.appendChild(mosaicEl);
       requestAnimationFrame(() => this.layoutMosaic());
     }
 
-    this.updateCounter(count);
+    // Update counter with real total from DB
+    const total = await StorageLayer.getCount();
+    this.updateCounter(total);
 
     // Smooth scroll to reveal the new paw (scroll mode only)
     if (this.mode === 'scroll') {
@@ -430,6 +512,14 @@ const PawWallRenderer = {
     track.addEventListener('touchstart', (e) => onDown(e.touches[0].pageX), { passive: true });
     track.addEventListener('touchmove',  (e) => onMove(e.touches[0].pageX), { passive: true });
     track.addEventListener('touchend',   onUp);
+
+    // Infinite scroll: load more paws when near the right end
+    track.addEventListener('scroll', () => {
+      if (this._allLoaded || this._loadingMore) return;
+      if (track.scrollLeft + track.clientWidth > track.scrollWidth - 600) {
+        this.loadMore();
+      }
+    }, { passive: true });
   },
 
   /* ---- Arrow buttons ---- */
@@ -1080,11 +1170,14 @@ const FormModal = {
   overlay: null,
   form: null,
   lastSubmit: 0,
-  COOLDOWN_MS: 30_000,
+  COOLDOWN_MS: 60_000,
+  LS_KEY: 'packPrint_lastSubmit',
 
   init() {
     this.overlay = document.getElementById('modal-overlay');
     this.form    = document.getElementById('paw-form');
+    // Restore last submit time from localStorage so cooldown survives page reloads
+    this.lastSubmit = parseInt(localStorage.getItem(this.LS_KEY) || '0', 10);
 
     document.getElementById('open-form-btn')?.addEventListener('click', () => this.open());
 
@@ -1177,6 +1270,7 @@ const FormModal = {
       const saved = await StorageLayer.add(entry);
 
       this.lastSubmit = Date.now();
+      localStorage.setItem(this.LS_KEY, String(this.lastSubmit));
       this.close();
       this.form.reset();
       CountrySelect.reset();
@@ -1200,11 +1294,28 @@ const FormModal = {
   },
 };
 
-/** Very basic spam word filter */
+/** Expanded content filter — German + English profanity & hate speech */
 function containsSpam(text) {
   if (!text) return false;
-  const BLOCKED = ['http://', 'https://', 'www.', '<script', 'onclick'];
-  const lower = text.toLowerCase();
+  // Normalise leet-speak substitutions before checking
+  const lower = text.toLowerCase()
+    .replace(/0/g,'o').replace(/@/g,'a').replace(/3/g,'e')
+    .replace(/1/g,'i').replace(/!/g,'i').replace(/\$/g,'s');
+
+  const BLOCKED = [
+    // Links / injection
+    'http://','https://','www.','<script','onclick','javascript:',
+    // English
+    'fuck','shit','cunt','bitch','asshole','nigger','nigga','faggot',
+    'retard','whore','slut','bastard','motherfucker','kys',
+    'kill yourself','rape','nazi','hitler',
+    // German
+    'hurensohn','wichser','wixer','arschloch','vollidiot',
+    'schwuchtel','fotze','nutte','schlampe','pisser','drecksau',
+    'fick dich','ficken','penner','depp','trottel','mongo',
+    'verpiss','verpisst',
+  ];
+
   return BLOCKED.some(w => lower.includes(w));
 }
 

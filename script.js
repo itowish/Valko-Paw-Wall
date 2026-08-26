@@ -35,7 +35,7 @@ const StorageLayer = {
     if (USE_SUPABASE) {
       try {
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&limit=10000&select=id,created_at,country_code,country_name`,
+          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&limit=100000&select=id,created_at,country_code,country_name`,
           { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);

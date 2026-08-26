@@ -1309,6 +1309,35 @@ button {
   background: var(--teal);
 }
 
+.wall-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.wall-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.4rem;
+  background: transparent;
+  border: 1px solid var(--teal);
+  border-radius: 6px;
+  color: var(--teal);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.wall-zoom-btn:hover {
+  background: var(--teal);
+  color: #fff;
+}
+
 /* ---- Wall mode visibility — JS sets data-wall-mode on section ---- */
 /* Default: scroll visible, mosaic hidden */
 #paw-wall-scroll-wrap  { display: block; }
@@ -1364,6 +1393,8 @@ button {
   /* Large canvas — JS sizes + positions it, absolutely placed paws inside */
   position: absolute;
   top: 0;
+  transform-origin: top left;
+  transition: transform 0.2s ease;
   left: 0;
   /* Size is set dynamically by JS based on entry count */
   will-change: transform;

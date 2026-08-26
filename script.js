@@ -577,10 +577,29 @@ const PawWallRenderer = {
 
   /* ---- Mode switcher ---- */
   initModeSwitcher() {
-    const section   = document.getElementById('paw-wall');
-    const btnScroll = document.getElementById('mode-scroll');
-    const btnMosaic = document.getElementById('mode-mosaic');
+    const section    = document.getElementById('paw-wall');
+    const btnScroll  = document.getElementById('mode-scroll');
+    const btnMosaic  = document.getElementById('mode-mosaic');
+    const zoomWrap   = document.getElementById('wall-zoom-controls');
+    const btnZoomIn  = document.getElementById('zoom-in');
+    const btnZoomOut = document.getElementById('zoom-out');
+    const btnZoomRst = document.getElementById('zoom-reset');
     if (!section || !btnScroll || !btnMosaic) return;
+
+    // Zoom state
+    let zoomLevel = 1.0;
+    const ZOOM_STEP = 0.15;
+    const ZOOM_MIN  = 0.4;
+    const ZOOM_MAX  = 2.5;
+
+    const applyZoom = () => {
+      if (this.mosaic) this.mosaic.style.transform = `scale(${zoomLevel})`;
+      if (btnZoomRst) btnZoomRst.textContent = `${Math.round(zoomLevel * 100)}%`;
+    };
+
+    if (btnZoomIn)  btnZoomIn.addEventListener('click',  () => { zoomLevel = Math.min(ZOOM_MAX, +(zoomLevel + ZOOM_STEP).toFixed(2)); applyZoom(); });
+    if (btnZoomOut) btnZoomOut.addEventListener('click', () => { zoomLevel = Math.max(ZOOM_MIN, +(zoomLevel - ZOOM_STEP).toFixed(2)); applyZoom(); });
+    if (btnZoomRst) btnZoomRst.addEventListener('click', () => { zoomLevel = 1.0; applyZoom(); });
 
     const activate = (mode) => {
       this.mode = mode;
@@ -591,6 +610,8 @@ const PawWallRenderer = {
       btnMosaic.setAttribute('aria-pressed', String(mode === 'mosaic'));
       // Show/hide via data attribute (CSS uses [data-wall-mode])
       section.setAttribute('data-wall-mode', mode);
+      // Zoom controls only in mosaic mode
+      if (zoomWrap) zoomWrap.hidden = (mode !== 'mosaic');
       // Accessibility
       const scrollWrap = document.getElementById('paw-wall-scroll-wrap');
       const mosaicWrap = document.getElementById('paw-wall-mosaic-wrap');
@@ -976,7 +997,10 @@ const WorldMap = {
     window.addEventListener('resize', resize, { passive: true });
 
     /* Load data */
-    const entries    = await StorageLayer.getAll();
+    const [entries, totalCount] = await Promise.all([
+      StorageLayer.getAll(),
+      StorageLayer.getCount(),
+    ]);
     const countryMap = {};
     entries.forEach(e => {
       if (!e.countryCode) return;
@@ -993,7 +1017,7 @@ const WorldMap = {
     if (statsEl) {
       statsEl.innerHTML = `
         <div class="world-stat">
-          <span class="world-stat-number">${entries.length}</span>
+          <span class="world-stat-number">${totalCount.toLocaleString()}</span>
           <span class="world-stat-label">Paws on the wall</span>
         </div>
         <div class="world-stat">

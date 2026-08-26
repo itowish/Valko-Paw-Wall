@@ -269,6 +269,12 @@
                 Wall
               </button>
             </div>
+            <!-- Zoom controls (wall mode only) -->
+            <div class="wall-zoom-controls" id="wall-zoom-controls" aria-label="Zoom" hidden>
+              <button class="wall-zoom-btn" id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+              <button class="wall-zoom-btn" id="zoom-reset" aria-label="Reset zoom" title="Reset zoom">100%</button>
+              <button class="wall-zoom-btn" id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+            </div>
           </div>
         </div>
       </div>
@@ -484,7 +490,7 @@
         <!-- Country -->
         <div class="form-group">
           <label class="form-label" for="field-country">
-            Country <span class="optional-mark">(optional)</span>
+            Country/Region <span class="optional-mark">(optional)</span>
           </label>
           <div class="country-select-wrap">
             <input
@@ -492,14 +498,14 @@
               id="field-country"
               name="countrySearch"
               class="form-input"
-              placeholder="Search your country…"
+              placeholder="Search your country/region…"
               autocomplete="off"
               role="combobox"
               aria-expanded="false"
               aria-autocomplete="list"
               aria-controls="country-listbox"
             />
-            <ul class="country-dropdown" id="country-listbox" role="listbox" aria-label="Country suggestions"></ul>
+            <ul class="country-dropdown" id="country-listbox" role="listbox" aria-label="Country/Region suggestions"></ul>
           </div>
           <input type="hidden" id="field-country-code" name="countryCode" />
           <input type="hidden" id="field-country-name" name="countryName" />

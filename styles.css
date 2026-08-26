@@ -1257,6 +1257,13 @@ button {
   text-align: center;
 }
 
+/* Custom PNG flag images (e.g. Myanmar) */
+.flag-img {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 2px;
+  object-fit: cover;
+}
 @keyframes pawStamp {
   0%   { transform: rotate(var(--rotation, 0deg)) scale(0); opacity: 0; }
   60%  { transform: rotate(var(--rotation, 0deg)) scale(1.15); opacity: 1; }

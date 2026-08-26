@@ -195,6 +195,7 @@ const COUNTRIES = [
   { code: 'LV', name: 'Latvia' }, { code: 'LB', name: 'Lebanon' }, { code: 'LT', name: 'Lithuania' },
   { code: 'LU', name: 'Luxembourg' }, { code: 'MY', name: 'Malaysia' }, { code: 'MT', name: 'Malta' },
   { code: 'MX', name: 'Mexico' }, { code: 'MD', name: 'Moldova' }, { code: 'MA', name: 'Morocco' },
+  { code: 'MM', name: 'Myanmar' },
   { code: 'NL', name: 'Netherlands' }, { code: 'NZ', name: 'New Zealand' }, { code: 'NG', name: 'Nigeria' },
   { code: 'MK', name: 'North Macedonia' }, { code: 'NO', name: 'Norway' }, { code: 'PK', name: 'Pakistan' },
   { code: 'PE', name: 'Peru' }, { code: 'PH', name: 'Philippines' }, { code: 'PL', name: 'Poland' },
@@ -231,6 +232,19 @@ function displayCountryName(code, name) {
   return name || '';
 }
 
+/** Custom PNG flags for countries whose emoji flag doesn't render reliably */
+const CUSTOM_FLAGS = { 'MM': 'assets/images/flags/mm.png' };
+
+/** Returns flag as HTML string — use in innerHTML contexts (paw entries, dropdown).
+ *  Falls back to emoji for countries without a custom PNG. */
+function countryFlagHtml(code) {
+  if (!code || code.length !== 2) return '';
+  const upper = code.toUpperCase();
+  if (CUSTOM_FLAGS[upper]) {
+    return `<img src="${CUSTOM_FLAGS[upper]}" alt="" class="flag-img" width="20" height="14">`;
+  }
+  return countryFlag(code);
+}
 
 /* ================================================================
    PAW WALL RENDERER — horizontal flex scroll + mosaic wall modes
@@ -468,7 +482,7 @@ const PawWallRenderer = {
     el.style.setProperty('--stamp-delay', `${Math.min(index * 30, 600)}ms`);
     el.style.setProperty('--bob-delay',   `${Math.min(index * 30, 600) + 500 + (index * 317 % 2000)}ms`);
 
-    const flag        = entry.countryCode ? countryFlag(entry.countryCode) : '';
+    const flag        = entry.countryCode ? countryFlagHtml(entry.countryCode) : '';
     const displayName = displayCountryName(entry.countryCode, entry.countryName);
 
     el.innerHTML = `
@@ -1084,7 +1098,7 @@ const CountrySelect = {
         li.className = 'country-option';
         li.setAttribute('role', 'option');
         li.setAttribute('id', `country-opt-${i}`);
-        li.innerHTML = `<span class="country-flag">${countryFlag(c.code)}</span> ${escapeHtml(c.name)}`;
+        li.innerHTML = `<span class="country-flag">${countryFlagHtml(c.code)}</span> ${escapeHtml(c.name)}`;
         li.addEventListener('mousedown', () => this.select(c, input, listbox, codeField, nameField));
         listbox.appendChild(li);
       });

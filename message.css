@@ -221,3 +221,42 @@ body {
   .msg-appeal { padding: 1.2rem 1.2rem; }
   .msg-body p { font-size: 1rem; }
 }
+
+/* ---- Photo carousel ---- */
+.msg-carousel-wrap {
+  max-width: 680px;
+  margin: 3rem auto 0;
+  overflow: hidden;
+  border-radius: 16px;
+  /* Soft fade at the edges */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image:         linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.msg-carousel {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: carousel-scroll 28s linear infinite;
+  pointer-events: none;
+  user-select: none;
+}
+
+.msg-carousel img {
+  height: 260px;
+  width: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+
+@keyframes carousel-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 600px) {
+  .msg-carousel img { height: 200px; }
+  .msg-carousel-wrap { margin-top: 2rem; border-radius: 12px; }
+}

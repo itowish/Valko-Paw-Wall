@@ -336,6 +336,17 @@ const PawWallRenderer = {
 
     this.updateCounter(total);
     requestAnimationFrame(() => this.layoutMosaic());
+
+    // Load all remaining paws in the background so mosaic + scroll both show everything
+    this._loadAllRemaining();
+  },
+
+  async _loadAllRemaining() {
+    while (!this._allLoaded) {
+      await this.loadMore();
+      // Small pause between batches to avoid hammering the API
+      await new Promise(r => setTimeout(r, 300));
+    }
   },
 
   async loadMore() {

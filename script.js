@@ -1314,6 +1314,13 @@ function containsSpam(text) {
     'schwuchtel','fotze','nutte','schlampe','pisser','drecksau',
     'fick dich','ficken','penner','depp','trottel','mongo',
     'verpiss','verpisst',
+    // Chinese profanity & hate speech
+    '操你','草你','操你妈','你妈的','妈的','去死','该死','死去',
+    '废物','垃圾','滚开','傻逼','煞笔','智障','脑残','白痴',
+    '贱人','臭婊子','婊子','妓女','混蛋','狗逼','狗杂种',
+    '滚蛋','滚出去','死妈','死全家','全家死',
+    // Ao Yin hate — fandom-specific
+    '终于删了','该消失','消失吧','活该删','删的好','删了好',
   ];
 
   return BLOCKED.some(w => lower.includes(w));

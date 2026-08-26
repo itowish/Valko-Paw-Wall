@@ -90,6 +90,33 @@ const StorageLayer = {
     return (await this.getAll()).length;
   },
 
+  /** Search entries by name or #number — queries DB directly so all pages are covered */
+  async search(query) {
+    const q = query.trim();
+    if (!q) return [];
+    if (USE_SUPABASE) {
+      try {
+        let url;
+        if (q.startsWith('#')) {
+          const id = parseInt(q.slice(1), 10);
+          if (isNaN(id)) return [];
+          url = `${SUPABASE_URL}/rest/v1/paw_entries?id=eq.${id}&select=*&limit=10`;
+        } else {
+          url = `${SUPABASE_URL}/rest/v1/paw_entries?name=ilike.${encodeURIComponent('*' + q + '*')}&select=*&limit=10&order=created_at.asc`;
+        }
+        const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
+        const rows = await res.json();
+        return rows.map(r => this._normaliseRow(r));
+      } catch { return []; }
+    }
+    const all = await this.getAll();
+    const ql = q.toLowerCase();
+    return all.filter(e =>
+      (e.hunterName || '').toLowerCase().includes(ql) ||
+      (e.hunterNumber || '').toLowerCase().includes(ql)
+    ).slice(0, 10);
+  },
+
   /** Persist a new entry and return the saved object */
   async add(entry) {
     if (USE_SUPABASE) {
@@ -677,15 +704,12 @@ const PawWallRenderer = {
     });
   },
 
-  updateSearchDropdown(query, dropdown) {
+  async updateSearchDropdown(query, dropdown) {
     const q = query.trim().toLowerCase();
     if (!q) { this.closeDropdown(dropdown); return; }
 
-    // Collect unique entries from scroll track (source of truth)
-    const entries = Array.from(this.track.querySelectorAll('.paw-entry'));
-    const matches = entries.filter(el =>
-      el.dataset.name.includes(q) || el.dataset.number.includes(q)
-    );
+    // Search entire DB — not just loaded DOM elements
+    const matches = await StorageLayer.search(q);
 
     if (!matches.length) {
       dropdown.innerHTML = '<div class="paw-search-empty">No paws found</div>';
@@ -693,21 +717,20 @@ const PawWallRenderer = {
       return;
     }
 
-    dropdown.innerHTML = matches.slice(0, 8).map((el, i) => {
-      const name = el.querySelector('.paw-entry-name')?.textContent || '';
-      const flag = el.querySelector('.paw-entry-flag')?.textContent || '';
-      const num  = el.querySelector('.paw-entry-number')?.textContent || '';
-      return `<button class="paw-search-result" data-index="${entries.indexOf(el)}" tabindex="0">
+    dropdown.innerHTML = matches.slice(0, 8).map((entry, i) => {
+      const flag = entry.countryCode ? countryFlagHtml(entry.countryCode) : '';
+      const num  = entry.hunterNumber || '';
+      return `<button class="paw-search-result" data-index="${i}" tabindex="0">
         <span class="psr-flag">${flag}</span>
-        <span class="psr-name">${name}</span>
-        ${num ? `<span class="psr-num">${num}</span>` : ''}
+        <span class="psr-name">${escapeHtml(entry.hunterName)}</span>
+        ${num ? `<span class="psr-num">${escapeHtml(num)}</span>` : ''}
       </button>`;
     }).join('');
 
     dropdown.querySelectorAll('.paw-search-result').forEach(btn => {
       btn.addEventListener('click', () => {
-        const idx = parseInt(btn.dataset.index);
-        this.jumpToEntry(entries[idx]);
+        const entry = matches[parseInt(btn.dataset.index)];
+        this.jumpToEntry(entry);
         document.getElementById('paw-search').value = '';
         this.closeDropdown(dropdown);
       });
@@ -716,20 +739,36 @@ const PawWallRenderer = {
     dropdown.hidden = false;
   },
 
-  jumpToEntry(el) {
-    // Find the same paw in the mosaic by name+number
-    const name   = el.dataset.name;
-    const number = el.dataset.number;
+  jumpToEntry(entry) {
+    // Try to find the element in the DOM (only loaded entries)
+    const num  = entry.hunterNumber || '';
+    const name = entry.hunterName  || '';
+    const domEl = this.track
+      ? this.track.querySelector(`.paw-entry[data-name="${CSS.escape(name)}"][data-number="${CSS.escape(num)}"]`)
+      : null;
     const mosaicEl = this.mosaic
-      ? this.mosaic.querySelector(`.paw-entry[data-name="${name}"][data-number="${number}"]`)
+      ? this.mosaic.querySelector(`.paw-entry[data-name="${CSS.escape(name)}"][data-number="${CSS.escape(num)}"]`)
       : null;
 
-    // Highlight in both containers
     const highlight = (target) => {
       if (!target) return;
       target.classList.remove('paw-entry--found');
-      void target.offsetWidth; // force reflow to restart animation
+      void target.offsetWidth;
       target.classList.add('paw-entry--found');
+      setTimeout(() => target.classList.remove('paw-entry--found'), 3000);
+    };
+
+    if (this.mode === 'scroll') {
+      if (domEl) {
+        // Entry is loaded — scroll to it
+        this._autoScrollPaused = true;
+        this.track.scrollTo({ left: domEl.offsetLeft - this.track.offsetWidth / 2 + domEl.offsetWidth / 2, behavior: 'smooth' });
+        setTimeout(() => { highlight(domEl); this._autoScrollPaused = false; }, 300);
+      } else {
+        // Not yet loaded — open detail popup instead
+        PawDetail.open(entry);
+      }
+    } else {
       setTimeout(() => target.classList.remove('paw-entry--found'), 3000);
     };
 
@@ -749,11 +788,12 @@ const PawWallRenderer = {
         this._panX = -(targetX - VW / 2 + 50);
         this._panY = -(targetY - VH / 2 + 55);
         this._applyPan();
+        highlight(mosaicEl);
+      } else {
+        // Not yet loaded in mosaic — open detail popup
+        PawDetail.open(entry);
       }
-      highlight(mosaicEl);
     }
-    // Always pre-highlight the counterpart so it glows when user switches mode
-    setTimeout(() => highlight(this.mode === 'scroll' ? mosaicEl : el), 200);
   },
 
   closeDropdown(dropdown) {

@@ -116,11 +116,12 @@ const StorageLayer = {
         const [row] = await res.json();
         return this._normaliseRow(row);
       } catch (err) {
-        console.warn('Supabase write failed, saving locally:', err);
+        console.warn('Supabase write failed:', err);
+        throw new Error('CONNECTION_ERROR');
       }
     }
 
-    // localStorage fallback
+    // localStorage fallback (only used when Supabase is not configured)
     const all = await this.getAll();
     const saved = {
       id:          `paw_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
@@ -1286,7 +1287,9 @@ const FormModal = {
     } catch (err) {
       console.error(err);
       document.getElementById('form-cooldown').textContent =
-        'Something went wrong. Please try again.';
+        err.message === 'CONNECTION_ERROR'
+          ? 'Could not connect — please check your internet and try again.'
+          : 'Something went wrong. Please try again.';
     } finally {
       btn.disabled = false;
       btn.innerHTML = '<span class="btn-icon">🐾</span> ADD MY PAW';

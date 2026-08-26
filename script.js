@@ -35,7 +35,7 @@ const StorageLayer = {
     if (USE_SUPABASE) {
       try {
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&select=id,created_at,country_code,country_name`,
+          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&limit=10000&select=id,created_at,country_code,country_name`,
           { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
@@ -1535,7 +1535,7 @@ const PackCountSection = {
     if (!section) return;
 
     const entries   = await StorageLayer.getAll();
-    const total     = entries.length;
+    const total     = await StorageLayer.getCount();
     const countries = new Set(entries.map(e => e.countryCode).filter(Boolean)).size;
 
     const countriesEl = document.getElementById('pack-count-countries');
@@ -1596,7 +1596,7 @@ const PackCountSection = {
     if (!numEl) return;
 
     const entries  = await StorageLayer.getAll();
-    const total    = entries.length;
+    const total    = await StorageLayer.getCount();
     const countries = new Set(entries.map(e => e.countryCode).filter(Boolean)).size;
 
     numEl.textContent = total.toLocaleString();

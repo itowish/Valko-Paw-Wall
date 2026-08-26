@@ -1,0 +1,223 @@
+/* ============================================================
+   MESSAGE PAGE — Light theme
+   ============================================================ */
+
+/* ---- Fonts (same local files as main site) ---- */
+@font-face {
+  font-family: 'Orbitron';
+  src: url('assets/fonts/orbitron.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('assets/fonts/inter.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  src: url('assets/fonts/caveat.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---- Reset & base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:       #0abfbf;
+  --teal-dark:  #089898;
+  --bg:         #faf7f2;
+  --surface:    #ffffff;
+  --text:       #1c2b2b;
+  --text-mid:   #3a4e4e;
+  --text-muted: #7a9090;
+  --border:     #e2eded;
+  --font-display: 'Orbitron', monospace;
+  --font-body:    'Inter', sans-serif;
+  --font-hand:    'Caveat', cursive;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Nav ---- */
+.msg-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.5rem;
+}
+
+.msg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.msg-back:hover { color: var(--teal-dark); }
+
+/* ---- Main layout ---- */
+.msg-main {
+  padding: 3rem 1.5rem 5rem;
+}
+
+.msg-article {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ---- Header ---- */
+.msg-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.msg-title {
+  font-family: var(--font-hand);
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  font-weight: 600;
+  color: var(--teal);
+  line-height: 1.15;
+}
+
+.msg-paw img {
+  opacity: 0.35;
+  filter: invert(52%) sepia(60%) saturate(500%) hue-rotate(148deg);
+}
+
+/* ---- Body text ---- */
+.msg-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.msg-body p {
+  font-size: 1.05rem;
+  color: var(--text-mid);
+  line-height: 1.85;
+}
+
+.msg-body strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ---- Valko quote ---- */
+.msg-quote {
+  position: relative;
+  margin: 0.5rem 0;
+  padding: 1.5rem 2rem 1.5rem 2.5rem;
+  background: var(--surface);
+  border-left: 4px solid var(--teal);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 2px 12px rgba(10, 191, 191, 0.08);
+}
+
+.msg-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.4rem;
+  left: 0.6rem;
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  color: var(--teal);
+  opacity: 0.35;
+  line-height: 1;
+}
+
+.msg-quote p {
+  font-style: italic;
+  font-size: 1.15rem !important;
+  color: var(--text) !important;
+  font-weight: 500;
+  line-height: 1.7 !important;
+  padding-left: 0.5rem;
+}
+
+/* ---- Teal appeal section ---- */
+.msg-appeal {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, rgba(10,191,191,0.07) 0%, rgba(10,191,191,0.03) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(10, 191, 191, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.msg-appeal p {
+  color: var(--teal) !important;
+  font-weight: 600;
+  font-size: 1.1rem !important;
+  line-height: 1.6 !important;
+}
+
+/* ---- Aside / emotional parenthetical ---- */
+.msg-aside {
+  font-style: italic;
+  color: var(--text-muted) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.7 !important;
+  padding: 0.8rem 1.2rem;
+  border-left: 2px solid var(--border);
+}
+
+/* ---- Sign-off paw ---- */
+.msg-sign {
+  font-size: 2rem;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+/* ---- Footer ---- */
+.msg-footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.msg-footer p {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 600px) {
+  .msg-main { padding: 2rem 1rem 4rem; }
+  .msg-quote { padding: 1.2rem 1.2rem 1.2rem 1.8rem; }
+  .msg-appeal { padding: 1.2rem 1.2rem; }
+  .msg-body p { font-size: 1rem; }
+}

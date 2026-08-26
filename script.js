@@ -16,8 +16,8 @@
    Fill in your project URL and anon key to enable the real backend.
    Leave blank to use localStorage demo mode.
    ================================================================ */
-const SUPABASE_URL      = '';   // e.g. 'https://xxxx.supabase.co'
-const SUPABASE_ANON_KEY = '';   // your anon/public key
+const SUPABASE_URL      = 'https://tatnoxwdmiktiydmrmky.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_yhoJ43tgGU8wl2N27k3fkw_jQS_3Mh0';
 
 const USE_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
@@ -34,7 +34,7 @@ const StorageLayer = {
     if (USE_SUPABASE) {
       try {
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/paw_entries?is_visible=eq.true&order=created_at.asc&select=*`,
+          `${SUPABASE_URL}/rest/v1/paw_entries?order=created_at.asc&select=*`,
           { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
@@ -64,13 +64,10 @@ const StorageLayer = {
               Prefer: 'return=representation',
             },
             body: JSON.stringify({
-              hunter_name:   entry.hunterName,
-              hunter_id:     entry.hunterNumber || null,
+              name:          entry.hunterName,
               country_code:  entry.countryCode  || null,
               country_name:  entry.countryName  || null,
               message:       entry.message      || null,
-              origin:        entry.origin       || null,
-              is_visible:    true,
             }),
           }
         );
@@ -104,12 +101,12 @@ const StorageLayer = {
     return {
       id:           row.id,
       timestamp:    Date.parse(row.created_at),
-      hunterName:   row.hunter_name,
-      hunterNumber: row.hunter_id    || '',
+      hunterName:   row.name,
+      hunterNumber: row.id ? `#${String(row.id).padStart(5, '0')}` : '',
       countryCode:  row.country_code || '',
       countryName:  row.country_name || '',
       message:      row.message      || '',
-      origin:       row.origin       || '',
+      origin:       '',
     };
   },
 

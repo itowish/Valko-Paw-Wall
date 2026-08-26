@@ -38,7 +38,8 @@ const StorageLayer = {
           { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
         );
         if (!res.ok) throw new Error(`Supabase ${res.status}`);
-        return await res.json();
+        const rows = await res.json();
+        return rows.map(r => this._normaliseRow(r));
       } catch (err) {
         console.warn('Supabase read failed, using localStorage:', err);
       }

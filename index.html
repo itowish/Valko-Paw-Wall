@@ -18,12 +18,15 @@
       <a href="#hero" class="nav-logo-link" aria-label="Back to top">
         <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="nav-logo" />
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-links">
         <a href="#paw-wall" class="nav-link">Paw Wall</a>
         <a href="gamescom.html" class="nav-link">Gamescom</a>
         <a href="message.html" class="nav-link">From the Creator</a>
         <a href="#leave-your-paw" class="nav-cta">Leave Your Paw</a>
       </div>
+      <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -602,5 +605,23 @@
   </button>
 
   <script src="script.js"></script>
+  <script>
+    // Burger menu toggle
+    const burger   = document.getElementById('nav-burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      const open = burger.classList.toggle('open');
+      navLinks.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    });
+    // Close menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        navLinks.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
 </body>
 </html>

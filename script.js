@@ -212,14 +212,14 @@ const COUNTRIES = [
   { code: 'BG', name: 'Bulgaria' }, { code: 'CA', name: 'Canada' }, { code: 'CL', name: 'Chile' },
   { code: 'CN', name: 'China' }, { code: 'MO', name: 'China · Macao SAR', aliases: ['macao', 'macau'] }, { code: 'CO', name: 'Colombia' }, { code: 'HR', name: 'Croatia' },
   { code: 'CY', name: 'Cyprus' }, { code: 'CZ', name: 'Czech Republic' }, { code: 'DK', name: 'Denmark' },
-  { code: 'EC', name: 'Ecuador' }, { code: 'EG', name: 'Egypt' }, { code: 'EE', name: 'Estonia' },
+  { code: 'EC', name: 'Ecuador' }, { code: 'EG', name: 'Egypt' }, { code: 'EE', name: 'Estonia' }, { code: 'ET', name: 'Ethiopia' },
   { code: 'FI', name: 'Finland' }, { code: 'FR', name: 'France' }, { code: 'GE', name: 'Georgia' },
   { code: 'DE', name: 'Germany' }, { code: 'GH', name: 'Ghana' }, { code: 'GR', name: 'Greece' },
   { code: 'HK', name: 'China · Hong Kong SAR', aliases: ['hong kong'] }, { code: 'HU', name: 'Hungary' }, { code: 'IN', name: 'India' },
   { code: 'ID', name: 'Indonesia' }, { code: 'IE', name: 'Ireland' }, { code: 'IL', name: 'Israel' },
   { code: 'IT', name: 'Italy' }, { code: 'JP', name: 'Japan' }, { code: 'JO', name: 'Jordan' },
   { code: 'KZ', name: 'Kazakhstan' }, { code: 'KE', name: 'Kenya' }, { code: 'KW', name: 'Kuwait' },
-  { code: 'LV', name: 'Latvia' }, { code: 'LB', name: 'Lebanon' }, { code: 'LT', name: 'Lithuania' },
+  { code: 'LV', name: 'Latvia' }, { code: 'LB', name: 'Lebanon' }, { code: 'LY', name: 'Libya' }, { code: 'LT', name: 'Lithuania' },
   { code: 'LU', name: 'Luxembourg' }, { code: 'MY', name: 'Malaysia' }, { code: 'MT', name: 'Malta' },
   { code: 'MX', name: 'Mexico' }, { code: 'MD', name: 'Moldova' }, { code: 'MA', name: 'Morocco' },
   { code: 'MM', name: 'Myanmar' },
@@ -260,7 +260,11 @@ function displayCountryName(code, name) {
 }
 
 /** Custom PNG flags for countries whose emoji flag doesn't render reliably */
-const CUSTOM_FLAGS = { 'MM': 'assets/images/flags/mm.png' };
+const CUSTOM_FLAGS = {
+  'MM': 'assets/images/flags/mm.png',
+  'LY': 'assets/images/flags/ly.png',
+  'ET': 'assets/images/flags/et.gif',
+};
 
 /** Returns flag as HTML string — use in innerHTML contexts (paw entries, dropdown).
  *  Falls back to emoji for countries without a custom PNG. */

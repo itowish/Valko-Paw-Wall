@@ -5,17 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>A Few Words from the Creator — Valko Paw Wall</title>
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="message.css" />
 </head>
 <body>
 
-  <nav class="msg-nav">
-    <a href="index.html" class="msg-back" aria-label="Back to Paw Wall">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Back to Paw Wall
-    </a>
+  <!-- Navigation -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html">
+        <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="nav-logo" />
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html#paw-wall" class="nav-link">Paw Wall</a>
+        <a href="gamescom.html" class="nav-link">Gamescom</a>
+        <a href="message.html" class="nav-link nav-link-active">From the Creator</a>
+        <a href="index.html#leave-your-paw" class="nav-cta">Leave Your Paw</a>
+      </div>
+      <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <main class="msg-main">
@@ -102,6 +112,21 @@
     <p>Valko Paw Wall · Pack Print Project</p>
     <p>This is a private, non-commercial fan project and is not officially affiliated with Infold Games.</p>
   </footer>
-
+  <script>
+    const burger   = document.getElementById('nav-burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      const open = burger.classList.toggle('open');
+      navLinks.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        navLinks.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
 </body>
 </html>

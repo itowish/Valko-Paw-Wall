@@ -17,11 +17,15 @@
       <a href="index.html">
         <img src="assets/images/logo-pack-print-project.png" alt="Pack Print Project" class="nav-logo" />
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-links">
         <a href="index.html#paw-wall" class="nav-link">Paw Wall</a>
         <a href="gamescom.html" class="nav-link nav-link-active">Gamescom</a>
+        <a href="message.html" class="nav-link">From the Creator</a>
         <a href="index.html#leave-your-paw" class="nav-cta">Leave Your Paw</a>
       </div>
+      <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -99,5 +103,21 @@
 
   <script src="data/gamescom-gallery.js"></script>
   <script src="gamescom.js"></script>
+  <script>
+    const burger   = document.getElementById('nav-burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      const open = burger.classList.toggle('open');
+      navLinks.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        burger.classList.remove('open');
+        navLinks.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
 </body>
 </html>

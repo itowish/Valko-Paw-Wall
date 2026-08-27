@@ -53,6 +53,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ---- Nav override (light theme) ---- */
+.site-nav {
+  background: var(--bg);
+  border-bottom-color: var(--border);
+}
+
 /* ---- Nav ---- */
 .msg-nav {
   position: sticky;

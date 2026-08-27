@@ -341,15 +341,15 @@ const PawWallRenderer = {
     this.updateCounter(total);
     requestAnimationFrame(() => this.layoutMosaic());
 
-    // Load all remaining paws in the background so mosaic + scroll both show everything
-    this._loadAllRemaining();
+    // Eagerly load a few more batches for a fuller mosaic, then stop.
+    // At 10k+ entries loading everything would create too many DOM nodes.
+    this._loadEagerBatches(4);
   },
 
-  async _loadAllRemaining() {
-    while (!this._allLoaded) {
+  async _loadEagerBatches(n) {
+    for (let i = 0; i < n && !this._allLoaded; i++) {
       await this.loadMore();
-      // Small pause between batches to avoid hammering the API
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 150));
     }
   },
 

@@ -1735,6 +1735,8 @@ function escapeHtml(str) {
 document.addEventListener('DOMContentLoaded', async () => {
   // Always start at the top — prevents browser from restoring mid-page scroll position
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // Clear hash from URL so a reload doesn't jump back to an anchor section
+  if (window.location.hash) history.replaceState(null, '', window.location.pathname);
   window.scrollTo(0, 0);
 
   await StorageLayer.seedIfEmpty();
